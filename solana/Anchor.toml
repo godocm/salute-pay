@@ -1,0 +1,13 @@
+[toolchain]
+anchor_version = "1.2.0"
+
+[features]
+resolution = true
+skip-lint = false
+
+[programs.localnet]
+salute_pay = "Ei1U3obSXWF7FzRR5jscAWesvkj7Jgmntit9A9upyBvH"
+
+[provider]
+cluster = "Localnet"
+wallet = "../.data/solana/merchant-keypair.json"

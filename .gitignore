@@ -1,0 +1,29 @@
+# Dependency trees and build products
+node_modules/
+portal/node_modules/
+artifacts/
+portal/.next/
+portal/dist/
+portal/.wrangler/
+portal/.sites-runtime/
+
+# Local test chain, SQLite state, accounts, and order metadata
+.data/
+*.sqlite
+*.sqlite-shm
+*.sqlite-wal
+
+# Local secrets and generated process output
+.env
+.env.*
+!.env.example
+*.log
+*.pid
+.DS_Store
+solana/target/
+solana/.anchor/
+solana/test-ledger/
+solana/node_modules/
+solana/*.keypair.json
+tron/node_modules/
+tron/build/

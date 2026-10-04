@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@openzeppelin/tron-contracts": "5.6.0",
+    "tronbox": "4.11.0"
+  }
+}

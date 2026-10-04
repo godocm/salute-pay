@@ -1,0 +1,123 @@
+{
+  "observedAt": "2026-09-24T15:28:06.395Z",
+  "network": "isolated Ganache 7.9.2 / Shanghai",
+  "compiler": "0.8.30+commit.73712a01.Emscripten.clang",
+  "assumptions": [
+    "Gas used from receipts; native transfers target EOAs. No public-chain funds or keys.",
+    "Native values simplified: this benchmarks transaction gas, not treasury accounting or residual dust.",
+    "MockERC20 from pinned OpenZeppelin 5.4.0; no tax/rebase. Not mainnet USDC, USDT, TRON or Solana.",
+    "Fresh deposit, merchant and executor token balances; established treasury seeded with one base unit.",
+    "Setup mint/deploy and optional announcement excluded. HD gas top-up counts transaction gas, not transferred principal.",
+    "One merchant withdrawal per payment; batching can reduce the HD amortized cost.",
+    "Current fixed-fee protocol, no proposed signed-intent authentication or dynamic-reward overhead included.",
+    "Executor reward is not an additional network fee: reward covers settlement cost plus profit/risk."
+  ],
+  "measurements": [
+    {
+      "name": "CREATE2 native, no announcement",
+      "transactions": 2,
+      "steps": [
+        {
+          "name": "customer deposit",
+          "gas": 21000
+        },
+        {
+          "name": "deploy and split",
+          "gas": 124371
+        }
+      ],
+      "totalGas": 145371
+    },
+    {
+      "name": "HD native, deposit to treasury to merchant",
+      "transactions": 3,
+      "steps": [
+        {
+          "name": "customer deposit",
+          "gas": 21000
+        },
+        {
+          "name": "sweep to treasury",
+          "gas": 21000
+        },
+        {
+          "name": "merchant withdrawal",
+          "gas": 21000
+        }
+      ],
+      "totalGas": 63000
+    },
+    {
+      "name": "HD native, direct merchant sweep",
+      "transactions": 2,
+      "steps": [
+        {
+          "name": "customer deposit",
+          "gas": 21000
+        },
+        {
+          "name": "sweep to merchant",
+          "gas": 21000
+        }
+      ],
+      "totalGas": 42000
+    },
+    {
+      "name": "CREATE2 mock ERC20, no announcement",
+      "transactions": 2,
+      "steps": [
+        {
+          "name": "customer deposit",
+          "gas": 51226
+        },
+        {
+          "name": "deploy and two token payouts",
+          "gas": 163020
+        }
+      ],
+      "totalGas": 214246
+    },
+    {
+      "name": "HD mock ERC20, gas top-up, treasury, merchant",
+      "transactions": 4,
+      "steps": [
+        {
+          "name": "customer deposit",
+          "gas": 51226
+        },
+        {
+          "name": "gas top-up",
+          "gas": 21000
+        },
+        {
+          "name": "sweep to established treasury",
+          "gas": 29326
+        },
+        {
+          "name": "merchant withdrawal",
+          "gas": 51226
+        }
+      ],
+      "totalGas": 152778
+    },
+    {
+      "name": "HD mock ERC20, gas top-up, direct merchant",
+      "transactions": 3,
+      "steps": [
+        {
+          "name": "customer deposit",
+          "gas": 51226
+        },
+        {
+          "name": "gas top-up",
+          "gas": 21000
+        },
+        {
+          "name": "sweep to merchant",
+          "gas": 46426
+        }
+      ],
+      "totalGas": 118652
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+[package]
+name = "salute_pay"
+version = "0.1.0"
+description = "Keyless per-order Solana payment vault with permissionless settlement"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "salute_pay"
+
+[features]
+default = []
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
+
+[dependencies]
+anchor-lang = "=1.2.0"
+anchor-spl = { version = "=1.2.0", features = ["associated_token", "token"] }
