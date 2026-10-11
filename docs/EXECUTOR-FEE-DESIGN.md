@@ -12,7 +12,7 @@ For the two-transaction address-only flow, creation of an offchain intent is fre
 
 ## What the existing code does
 
-`contracts/PaymentFactory.sol` hashes every economic term, including the fixed `executorFee`, into the address. `contracts/PaymentForwarder.sol` pays that fixed reward only on initial settlement and sends the remaining balance to the merchant. Subsequent funded calls sweep late deposits without another reward. Changing the current fee produces a different address; it does not reprice funds already sent to the original address.
+The main `contracts/PaymentCollection.sol` binds the original economic terms into the address. Its fixed intended-asset/origin reward applies per sweep; separate merchant-authorized actual-chain quotes can reprice collection without changing the address. See [ARCHITECTURE.md](ARCHITECTURE.md). The historical alternatives and arithmetic below are research, not current deployment measurements.
 
 The current contracts do not implement EIP-712 merchant signatures, fee auctions, fee oracles, automatic gas reimbursement, expiry recovery, or a TRON/Solana deployment. The optional `announce()` authenticates the merchant through `msg.sender`. Without announcement, the current address commitment fixes the supplied terms but does not prove the merchant authenticated the order offchain.
 

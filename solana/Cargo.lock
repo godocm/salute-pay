@@ -246,11 +246,8 @@ checksum = "85f6d2ad797b45d3e4b3364b433e78e4e95729ae2a187fe7032b976f54b5a2fb"
 dependencies = [
  "anchor-lang",
  "spl-associated-token-account-interface",
- "spl-pod",
  "spl-token-2022-interface",
- "spl-token-group-interface",
  "spl-token-interface",
- "spl-token-metadata-interface",
 ]
 
 [[package]]
@@ -1095,6 +1092,8 @@ version = "0.1.0"
 dependencies = [
  "anchor-lang",
  "anchor-spl",
+ "solana-instructions-sysvar",
+ "solana-sdk-ids",
 ]
 
 [[package]]

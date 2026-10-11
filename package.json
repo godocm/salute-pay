@@ -1,6 +1,36 @@
 {
-  "name": "salute-protocol-lab", "version": "0.1.0", "private": true, "type": "module",
-  "scripts": {"compile":"node scripts/compile-contracts.mjs", "test":"node --test --test-concurrency=1 test/*.test.mjs", "dev":"node scripts/dev.mjs", "lab":"node scripts/lab.mjs", "deploy":"node scripts/deploy.mjs", "executor":"node scripts/executor.mjs", "solana:observe":"node solana/scripts/observer.mjs", "solana:smoke":"node solana/scripts/smoke-local.mjs", "tron:observe":"node tron/scripts/observer.cjs", "build":"npm run compile && node scripts/export-abi.mjs && npm --prefix portal run build"},
-  "dependencies": {"@openzeppelin/contracts":"5.4.0", "ethers":"6.15.0", "ganache":"7.9.2", "solc":"0.8.30"},
-  "engines": {"node":">=22.13"}
+  "name": "salute-protocol-lab",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "compile": "node scripts/compile-contracts.mjs",
+    "compile:tron": "cd tron && ./node_modules/.bin/tronbox compile --all",
+    "test": "node --test --test-concurrency=1 test/*.test.mjs",
+    "test:platform": "node scripts/test-platform.mjs",
+    "dev": "npm --prefix portal run dev",
+    "build": "npm run compile && npm run compile:tron && node scripts/export-abi.mjs && npm --prefix portal run build",
+    "deploy": "node scripts/deploy-collection.mjs",
+    "deploy:testnets": "node scripts/deploy-testnets.mjs",
+    "executor": "node scripts/collect.mjs",
+    "order:create": "node scripts/create-order.mjs",
+    "reward:sign": "node scripts/sign-reward.mjs",
+    "solana:deploy": "node solana/scripts/deploy.mjs",
+    "solana:smoke": "node solana/scripts/smoke-collection.mjs",
+    "tron:deploy": "node tron/scripts/deploy.cjs",
+    "tron:test": "node tron/scripts/test-local.cjs",
+    "tempo:test": "node tempo/scripts/test-collection.mjs",
+    "test:wallet:ethereum": "node scripts/test-wallet-client.mjs ethereum",
+    "test:wallet:solana": "node scripts/test-wallet-client.mjs solana",
+    "test:wallet:tempo": "node scripts/test-wallet-client.mjs tempo"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "5.4.0",
+    "ethers": "6.15.0",
+    "ganache": "7.9.2",
+    "solc": "0.8.30"
+  },
+  "engines": {
+    "node": ">=22.13 <26"
+  }
 }

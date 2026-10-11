@@ -1,5 +1,7 @@
 # Ethereum, TRON, and Solana payment architecture
 
+Historical chain research follows. Current main payment behavior and deployment instructions are in [ARCHITECTURE.md](ARCHITECTURE.md) and [DEPLOYMENT.md](DEPLOYMENT.md). Earlier transaction-count and cost assumptions below are not deployment benchmarks for the main implementation.
+
 Research checked **2026-09-23** against the primary sources linked below. Ethereum/EVM, TRON TVM, and Solana now have local implementations. The TRON and Solana native/token paths passed local-chain tests on 2026-10-05. Neither port has a public-network deployment or independent audit. Cost examples are arithmetic illustrations, not deployed benchmarks or dollar quotes.
 
 ## What becomes decentralized

@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": null,
+  "networks": {
+    "solana": {
+      "chainId": "devnet",
+      "status": "not_deployed",
+      "deployment": "",
+      "dummyTokenAddress": "",
+      "token": ""
+    },
+    "tempo": {
+      "chainId": "42431",
+      "status": "not_deployed",
+      "deployment": "",
+      "dummyTokenAddress": "",
+      "token": ""
+    },
+    "ethereum": {
+      "chainId": "11155111",
+      "status": "not_deployed",
+      "deployment": "",
+      "dummyTokenAddress": "",
+      "token": ""
+    },
+    "base": {
+      "chainId": "84532",
+      "status": "not_deployed",
+      "deployment": "",
+      "dummyTokenAddress": "",
+      "token": ""
+    },
+    "arbitrum": {
+      "chainId": "421614",
+      "status": "not_deployed",
+      "deployment": "",
+      "dummyTokenAddress": "",
+      "token": ""
+    },
+    "robinhood": {
+      "chainId": "46630",
+      "status": "not_deployed",
+      "deployment": "",
+      "dummyTokenAddress": "",
+      "token": ""
+    },
+    "tron": {
+      "chainId": "3448148188",
+      "status": "not_deployed",
+      "deployment": "",
+      "dummyTokenAddress": "",
+      "token": ""
+    }
+  }
+}

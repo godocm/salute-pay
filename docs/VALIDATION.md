@@ -1,0 +1,50 @@
+# Main implementation validation
+
+Public-chain validation on 2026-10-11; website revisions checked on 2026-10-12. Eight public testnets are deployed and exercised. Cloud hosting/database are not yet configured.
+
+## Public testnet evidence
+
+- Ethereum Sepolia, Base Sepolia, Arbitrum Sepolia, BNB Testnet, Robinhood Testnet and Tempo Moderato pass live signed-order tests: public minting, funding before deployment, 10-token underpayment with an 8-token merchant receipt and 2-token reward, 500-token overpayment with a 498-token receipt, late sponsored collection and zero-reward collection with exactly one payout transfer. Receipts and measured gas are in `deployments/testnet-validation.json`.
+- An unchanged Ethereum-origin signed intent derives the same receiver address on Arbitrum, Base and BNB. Actual assets on each deposit chain are collected to the immutable merchant. Foreign recovery defaults to zero reward; an execution-chain reward quote works and nonce replay is rejected. This is recovery on the deposit chain, not bridging. Ethereum-origin recovery to those three targets was exercised; other compatible pairs are not individually live-tested. `deployments/recovery-validation.json` adds Base/BNB token and native recovery, native under/overpayment, execution-chain reward quotes and replay rejection.
+- TRON Nile passes public minting, TIP-712 authorization, underpayment, overpayment, late sponsored collection and zero reward with one payout transfer. `deployments/tron-validation.json` records transaction hashes, Energy and actual testnet fees separately.
+- The app's Tempo, Base and BNB wallet clients pass public signing, checkout verification, minting, under/overpayment and settlement. Receipt confirmation avoids parsing unrelated native Tempo transactions; see `deployments/tempo-wallet-validation.json`, `deployments/base-wallet-validation.json` and `deployments/bnb-wallet-validation.json`.
+- Solana Devnet passes Ed25519 signing, native prefunding/atomic registration, SOL and SPL under/overpayments, repeated rewards, late sponsored collection, public SPL minting, one-transfer zero-reward settlement, wrong-mint recovery and tampered-term/domain rejection. Upgrade authority is revoked. `deployments/solana-validation.json` records live receipts, lamport fees and compute units.
+- Solana app confirmations use HTTP signature polling to avoid separately throttled Devnet websocket subscriptions. Live setup, mint, deposit and collection checks pass in `deployments/solana-confirmation-validation.json`; no payment is resent during confirmation.
+- All eight activated deployments are recorded in `portal/public/deployments/main.json`.
+
+## Local runtime and app checks
+
+- 11 main EVM/CLI tests pass, covering five simulated chain IDs, partial/excess/late/wrong-asset balances, origin smart-wallet boundaries, quote replay binding, callback reentrancy and rollback.
+- Actual Tempo runtime and wallet client pass, including TIP-20 recipient policy rollback and under/over/repeated rewards.
+- Actual Solana runtime and Wallet Standard client pass, including native prefunding and atomic registration, SPL setup, merchant-sponsored tiny SOL deposits, under/overpayment, wrong-mint recovery and zero-reward collection. The new public test-mint instruction works for two independent callers with a separate mint-authority PDA; an incompatible mint authority is rejected.
+- TRON runtime with reviewed immutable-argument clones: four tests pass for native partial/excess deposits, sponsorship, wrong-token recovery and signature tampering.
+- PostgreSQL integration passes wallet sessions/replay/ownership, signed publication, shared payment links, concurrent monthly quotas, verified cross-chain accounting, webhook HMAC signatures, job authorization and SSRF guards.
+- Next.js production build and TypeScript checks pass.
+- Browser QA verifies the homepage, `/app` workspace, About/social links, developer docs with chain tabs and deployment addresses, mobile menu, illustrative under/overpayment controls, and keyboard tab navigation. The dedicated signed checkout QR/address/network warning, address copying, executor discovery/import, network and pricing pages are also checked. The merchant page shows the eight activated public testnets, mint controls and the database-disabled state. UI checks do not prove external wallet pairing.
+
+Ganache ERC20 simulation gas: first sponsored collection 160,446; repeated sponsored collection 61,927; first rewarded collection 170,649. Sponsored token sweeps emit exactly one transfer; rewarded sweeps emit two. These are local EVM gas units, not fees, not public-chain benchmarks, and not comparable to TRON Energy or Solana compute/rent.
+
+This is prototype testing, not an independent audit. Actual WalletConnect pairing remains dependent on the operator project ID and a compatible external wallet. Pricing support promises require operational staffing; subscription checkout is not implemented.
+
+## Website and launch checks · 2026-10-12
+
+- New headline, route-mark logo and favicon; main navigation uses Chains, About, Developer docs, Pricing and Launch app. Payments is retained only as the app workspace tab.
+- Chain ribbon animation pauses on hover and has explicit pause/resume controls, keyboard focus handling and reduced-motion fallback. Both loop copies link to the chain pages.
+- All eight chain pages build statically, display their native authorization/address/cost flow, use separate themes and link primary network documentation. Desktop/mobile checks find no horizontal overflow or broken network images.
+- The docs still derive eight factory/program addresses from the verified public registry. Each chain page links to its individual deployment anchor.
+- Retired network entries were removed from supported configuration, public fallback registries and unfunded skipped reports; funded historical records and `.data` remain untouched. Unknown network overrides are ignored by the publisher.
+- PostgreSQL integration passes after starting a named isolated loopback PostgreSQL test container. It covers wallet sessions, quotas, signed publication, receipt-based accounting, webhook signatures, job authorization and SSRF protections. No public-chain transactions were sent for these website revisions.
+- Local production settings are absent: no cloud database, canonical HTTPS origin, job secret or Reown project ID is configured. Hosted wallet pairing and receipt/webhook delivery still require the launch walkthrough in `docs/DEPLOYMENT.md`.
+- Default Vercel configuration omits cron to avoid Hobby deployment rejection. Optional paid-plan configuration supplies minute scheduling; an external scheduler must honor endpoint authorization and runtime limits.
+- The landing page now uses Salute Bank's navy/blue palette, an interactive create/pay/collect preview, selectable networks/assets and partial/excess/sponsored-payment controls. Other route layouts are retained with the shared blue palette. Beta/testnet labels remain visible.
+- The homepage comparison names Salute Bank, Request Network and Salute Pay, distinguishes Request's 0.9% service pricing and included EVM gas from Salute's infrastructure tiers, and labels Salute AML as unimplemented roadmap work. Free/Growth/Scale chain eligibility is shared between browser and publisher; two status/plan unit tests pass.
+- Checkout displays its network-specific wallet connector before exchange/QR instructions. Local browser QA checks a signed 100-sUSD order funded with 10 sUSD (90 remaining) and 500 sUSD (400 excess), separately from cumulative server history. PostgreSQL integration verifies overpaid status persists after collection and emits both the compatible `payment.paid` event and `payment.overpaid`.
+- Offline link fragment changes trigger fresh signature/address verification instead of retaining the previous order. Offline exports cannot supply trusted cumulative accounting fields. A confirmed payment whose status submission fails warns the payer to retain the receipt rather than resend.
+- The homepage's open-execution difference and downtime FAQ explain independent collection using exported signed orders, a fixed merchant destination and chain fees. They do not promise customer refunds or payout redirection. Preserve signed-order backups; dashboard non-custody alone does not ensure authorization data availability.
+
+## Landing illustration refinement · 2026-10-12
+
+- Replaced the hero with “No fees per transaction. No custody.” and an adjacent clarification that the zero charge is Salute's collection fee; network costs and optional executor rewards remain. Updated landing typography and readable preview labels.
+- Removed hero playback controls, timed phase state and simulated create/pay/collect actions. The remaining network/asset/deposit/reward calculator is explicitly labelled demo-only and never submits a transaction. Real execution stays in Launch app.
+- Replaced the three infrastructure illustrations with blue code-native motion: a looping signed/funded/matched order queue, sequential funded EVM deployment, and independent executors collecting to a fixed merchant destination. They are labelled illustrations, pause on hover, provide a shared pause button and respect reduced-motion preferences.
+- Production build and TypeScript checks pass. The existing local homepage responds successfully. Browser access was rejected by the browser tool in this refinement session, so visual and click-through checks of these latest changes remain unverified; no browser-policy bypass was attempted.

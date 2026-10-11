@@ -6,7 +6,8 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-salute_pay = "Ei1U3obSXWF7FzRR5jscAWesvkj7Jgmntit9A9upyBvH"
+salute_pay = "B2hF4D7ojHWbXkkFmSSApyR3ohuc8RY2bFiQe8z5foTj"
+
 
 [provider]
 cluster = "Localnet"

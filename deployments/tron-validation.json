@@ -1,0 +1,64 @@
+{
+  "at": "2026-10-11T22:20:55.196Z",
+  "status": "passed",
+  "chainId": "3448148188",
+  "factory": "TNSjMTiHYgM1nvFxZ6iDcqMMxjZqhX4LcL",
+  "token": "TMJJzx2mo1fP7pWT43Vgw4zBAAEaS3TgGL",
+  "merchant": "TVFe6XqWNtPkfwi28KgN6wJjidsnq65uKn",
+  "orderAddress": "TNC3bKkef9NzLfr7qhUpY4kaRz3ftdmmdo",
+  "checks": [
+    "TIP-712 merchant signature",
+    "public faucet",
+    "10 underpayment -> 8 merchant + 2 reward",
+    "500 overpayment -> 498 merchant + 2 reward",
+    "late sponsored collection",
+    "zero reward -> one payout transfer"
+  ],
+  "transactions": [
+    {
+      "hash": "cbf5841c96a83d99bcc1f8d1ac8afc0e772d1cd4ab40b68b56e919b345fc1ae8",
+      "energy": 12741,
+      "fee": 1274100
+    },
+    {
+      "hash": "ce9c919d147cdc17e3c42d9dfa36acce8452332b66c05e9dd3295731fd844fd9",
+      "energy": 28025,
+      "fee": 3148500
+    },
+    {
+      "hash": "9954c87d063ca07de08a5f680cf7029bff584d151878ebd076553bb3c7a70faf",
+      "energy": 151328,
+      "fee": 15736800
+    },
+    {
+      "hash": "b14df43f6d1ca9aa9e8c566005dc783cd2f9bb5e4ce8bcb00098fc26659cab56",
+      "energy": 28025,
+      "fee": 3148500
+    },
+    {
+      "hash": "c2a5f77ae2c6bc280f7284299088d3351383d57743974805418c8725f64425be",
+      "energy": 58231,
+      "fee": 6427100
+    },
+    {
+      "hash": "1ab50713a3fac68c43c75b1da670a84bef400c1fb2c546ce7781272f0e4d71aa",
+      "energy": 28025,
+      "fee": 3148500
+    },
+    {
+      "hash": "0c17e8d0a16148047c42d377855762734f4be096d4379d3df40017161ff3206a",
+      "energy": 42856,
+      "fee": 4953600
+    },
+    {
+      "hash": "8668c4dbb546bb70c25253ee6d7a00c3d73536718099cdf67736808fc7e2e6d6",
+      "energy": 28025,
+      "fee": 3148500
+    },
+    {
+      "hash": "d305a52ba7f77cf1021342d42ffb2b7877fd4b0663028e43d8aa6c884407397c",
+      "energy": 121091,
+      "fee": 12713100
+    }
+  ]
+}

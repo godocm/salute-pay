@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-11T16:21:25.558Z",
+  "chain": "bnb",
+  "status": "passed",
+  "checks": [
+    "same app wallet connector/client paths",
+    "merchant EIP-712 signing",
+    "separate checkout-link verification",
+    "public merchant mint button call",
+    "underpayment",
+    "overpayment",
+    "executor reward",
+    "public testnet transaction confirmations"
+  ],
+  "transactions": [
+    "0x3ca8544f9d6e5519e5812615c5b804c34d748429c52fb74ad400d914e5e30686",
+    "0xb18cbddac9b78090a08674cc0a20610fae3f54bb553dc74bbf6796f47f4affe7",
+    "0xfededdb82c1ad543be3d52c813450fb049e41f741623be192d27ba39ca57e679",
+    "0xae82955a3ad5b3786c61230d94a8df9304df562732c7e2cf22bc9cab202507bc",
+    "0x79cf53eb0f343c9cd53bfdd8ccb33bf0a365d4bba8fd1f93c1924138070f5425"
+  ]
+}

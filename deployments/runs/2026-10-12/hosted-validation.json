@@ -1,0 +1,34 @@
+{
+  "at": "2026-10-11T22:26:12.763Z",
+  "status": "passed",
+  "origin": "https://salutepay.vercel.app",
+  "chain": "Base Sepolia",
+  "paymentUrl": "https://salutepay.vercel.app/pay/6ydMktamAZOnesAQwVdeQYbEz0KR8PrY",
+  "merchant": "0x76eA8b22FAa525fbA937e83D36cE75E6Ea77A37D",
+  "checks": [
+    "hosted wallet-signature authentication",
+    "one-use challenge replay rejected",
+    "signed order publication and idempotency",
+    "shared payment page",
+    "payer deposit and different merchant payout",
+    "server-verified collection receipt and invoice accounting"
+  ],
+  "transactions": [
+    {
+      "kind": "deposit",
+      "hash": "0xa860589e32e5c2ff1e85b949e7091e580f2360087743363debd750dd3d752efa",
+      "gasUsed": "51226",
+      "explorerUrl": "https://sepolia.basescan.org/tx/0xa860589e32e5c2ff1e85b949e7091e580f2360087743363debd750dd3d752efa"
+    },
+    {
+      "kind": "settlement",
+      "hash": "0x453620c414f1197678b6a4c9f3177a205cf2a945282a080568a803745836f859",
+      "gasUsed": "170709",
+      "explorerUrl": "https://sepolia.basescan.org/tx/0x453620c414f1197678b6a4c9f3177a205cf2a945282a080568a803745836f859"
+    }
+  ],
+  "watcher": {
+    "scanned": 1,
+    "errors": 0
+  }
+}

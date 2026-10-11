@@ -1,0 +1,154 @@
+{
+  "at": "2026-10-11T16:30:04.640Z",
+  "networks": {
+    "ethereum": {
+      "status": "deployed",
+      "factory": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x8702f26D04d2234440Ca698e15896FA3C0A043cF",
+      "factoryTransaction": "0xf734e764eb56522eb8a501f83ea99957a06451b2c5bd74d8d4f24d94437935bb",
+      "tokenTransaction": "0x8237939aaa8ee8f358288d538dcc22364305698ad3bbcdae45ec4b05adb455f9",
+      "validation": "deployments/testnet-validation.json"
+    },
+    "base": {
+      "status": "deployed",
+      "factory": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x97BB91AF514D4c9984f3fEb671db5cA30e076F03",
+      "factoryTransaction": "0xa49831f1c03a19df2348447f3de7f4611cae490625598b455dac9a1ad1c22599",
+      "tokenTransaction": "0xb8d119e90ca531fa6e5f1e787364f45d5ccab30f9ffd80c2458f01620a761f99",
+      "validation": "deployments/testnet-validation.json"
+    },
+    "arbitrum": {
+      "status": "deployed",
+      "factory": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x97BB91AF514D4c9984f3fEb671db5cA30e076F03",
+      "factoryTransaction": "0x476deca8259979d8c04a5b388b1ed6433d476b2f17d821cc3b4ad95c2bc10bdd",
+      "tokenTransaction": "0x3a316408c4d2fabc3c7e070394cd5d697ca1bbb09ce331d982db66d8a13b002e",
+      "validation": "deployments/testnet-validation.json"
+    },
+    "tempo": {
+      "status": "deployed",
+      "factory": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x20c0000000000000000000001Debe449002EAb92",
+      "faucet": "0x562dbf71af7AA82D2C4a9524Ed06E37044570a37",
+      "factoryTransaction": "0x521acaf042ffbd5b4ffe8fe39e4799e760ed9ec6aa34ba049c5289955801aa0d",
+      "tokenTransaction": "0xa4dbae049d4066d9a0c9b6f56bdc31f58d8534dd9067b996ed3ebb173f42ee3b",
+      "validation": "deployments/testnet-validation.json"
+    },
+    "robinhood": {
+      "status": "deployed",
+      "factory": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x97BB91AF514D4c9984f3fEb671db5cA30e076F03",
+      "factoryTransaction": "0x2cf26f42470ed2805b541da450ec6b3804c6fbba9dbb92f2f655330125b2dab1",
+      "tokenTransaction": "0xf21b0d2cbdbe116856c1f7a80a852284ec339201c9921cadfe53c46b164af956",
+      "validation": "deployments/testnet-validation.json"
+    },
+    "bnb": {
+      "status": "deployed",
+      "factory": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x97BB91AF514D4c9984f3fEb671db5cA30e076F03",
+      "factoryTransaction": "0x67d66d9b7f36b404a58e705b9ac9304d88a142e314b811f0e5b539135f50e92e",
+      "tokenTransaction": "0xac92474cd3ce01933c9859a922512bef8f28a8aea630e84951321fda3fa47a0c",
+      "validation": "deployments/testnet-validation.json"
+    },
+    "tron": {
+      "status": "deployed",
+      "factory": "TNSjMTiHYgM1nvFxZ6iDcqMMxjZqhX4LcL",
+      "token": "TMJJzx2mo1fP7pWT43Vgw4zBAAEaS3TgGL",
+      "validation": "deployments/tron-validation.json"
+    },
+    "solana": {
+      "status": "deployed",
+      "program": "4soYk2h6YM9mAn3WWTCLgvzEGA5V1jWacupCASzY14zS",
+      "token": "HYYqqGLv2DjmpeHtMBeV8psRVBwwPvjjAW6XjTRwagKp",
+      "domain": "3292b0a10ea716fb77d5a951acef59c2c6b0dec5850e1f6feb40da7386991ffe",
+      "upgradeAuthority": null,
+      "programTransaction": "2VUdLc34YNiSKfC6h1yVsp1KSEWiBb12DuCUsjC5eSLQBCXTKGctRUvob8hswyR343DgbV7RdTjN6gHkTx8AvxUs",
+      "mintTransaction": "5uN28QniiNhpAGe9w7on4b4fG3nWa8nMaL3BhxbHqLaUAtuTRadN7jesyTffrPLHuUokLpWmpQFV5Z415tyhYMvU",
+      "validation": "deployments/solana-validation.json"
+    }
+  },
+  "deployments": {
+    "ethereum": {
+      "chain": "ethereum",
+      "chainId": "11155111",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x8702f26D04d2234440Ca698e15896FA3C0A043cF",
+      "domain": "",
+      "status": "ready",
+      "environment": "testnet",
+      "confirmations": 2
+    },
+    "arbitrum": {
+      "chain": "arbitrum",
+      "chainId": "421614",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x97BB91AF514D4c9984f3fEb671db5cA30e076F03",
+      "domain": "",
+      "status": "ready",
+      "environment": "testnet",
+      "confirmations": 2
+    },
+    "robinhood": {
+      "chain": "robinhood",
+      "chainId": "46630",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x97BB91AF514D4c9984f3fEb671db5cA30e076F03",
+      "domain": "",
+      "status": "ready",
+      "environment": "testnet",
+      "confirmations": 2
+    },
+    "tron": {
+      "chain": "tron",
+      "chainId": "3448148188",
+      "deployment": "TNSjMTiHYgM1nvFxZ6iDcqMMxjZqhX4LcL",
+      "token": "TMJJzx2mo1fP7pWT43Vgw4zBAAEaS3TgGL",
+      "domain": "",
+      "status": "ready",
+      "environment": "testnet",
+      "confirmations": 2
+    },
+    "tempo": {
+      "chain": "tempo",
+      "chainId": "42431",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x20c0000000000000000000001Debe449002EAb92",
+      "domain": "",
+      "feeToken": "0x20c0000000000000000000000000000000000001",
+      "faucet": "0x562dbf71af7AA82D2C4a9524Ed06E37044570a37",
+      "status": "ready",
+      "environment": "testnet",
+      "confirmations": 2
+    },
+    "bnb": {
+      "chain": "bnb",
+      "chainId": "97",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x97BB91AF514D4c9984f3fEb671db5cA30e076F03",
+      "domain": "",
+      "status": "ready",
+      "environment": "testnet",
+      "confirmations": 2
+    },
+    "base": {
+      "chain": "base",
+      "chainId": "84532",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x97BB91AF514D4c9984f3fEb671db5cA30e076F03",
+      "domain": "",
+      "status": "ready",
+      "environment": "testnet",
+      "confirmations": 2
+    },
+    "solana": {
+      "chain": "solana",
+      "chainId": "devnet",
+      "deployment": "4soYk2h6YM9mAn3WWTCLgvzEGA5V1jWacupCASzY14zS",
+      "token": "HYYqqGLv2DjmpeHtMBeV8psRVBwwPvjjAW6XjTRwagKp",
+      "domain": "3292b0a10ea716fb77d5a951acef59c2c6b0dec5850e1f6feb40da7386991ffe",
+      "status": "ready",
+      "environment": "testnet",
+      "confirmations": 2
+    }
+  }
+}

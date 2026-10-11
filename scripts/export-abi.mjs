@@ -1,9 +1,7 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
-import { dirname, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
-const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const read = async name => JSON.parse(await readFile(resolve(root, `artifacts/${name}.json`), 'utf8')).abi;
-const [factoryAbi, forwarderAbi, tokenAbi] = await Promise.all(['PaymentFactory', 'PaymentForwarder', 'MockERC20'].map(read));
-await mkdir(resolve(root, 'portal/lib'), { recursive: true });
-await writeFile(resolve(root, 'portal/lib/protocol.json'), JSON.stringify({ factoryAbi, forwarderAbi, tokenAbi }, null, 2) + '\n');
-console.log('Exported contract ABIs to portal/lib/protocol.json');
+import { readFile, writeFile } from 'node:fs/promises';
+const read = async name => JSON.parse(await readFile(new URL(`../artifacts/${name}.json`,import.meta.url),'utf8')).abi;
+const [factoryAbi,receiverAbi,tokenAbi] = await Promise.all(['PaymentFactory','PaymentReceiver','MockERC20'].map(read));
+const factoryArtifact=JSON.parse(await readFile(new URL('../artifacts/PaymentFactory.json',import.meta.url),'utf8'));
+const tronFactoryAbi=JSON.parse(await readFile(new URL('../tron/build/contracts/SaluteTronFactory.json',import.meta.url),'utf8')).abi;
+await writeFile(new URL('../portal/lib/protocol.json',import.meta.url),JSON.stringify({factoryAbi,receiverAbi,tokenAbi,tronFactoryAbi,factoryArtifact},null,2)+'\n');
+console.log('Exported main collection ABIs.');

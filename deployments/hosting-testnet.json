@@ -1,0 +1,42 @@
+{
+  "dateDubai": "2026-10-12",
+  "environment": "testnet",
+  "origin": "https://salutepay.vercel.app",
+  "vercel": {
+    "project": "salutepay",
+    "projectId": "prj_08fRqfaq4gBJuHL6wtSq2A5rzZSr",
+    "deploymentId": "dpl_Doydp6Mo11p64mtkxf1hcJ2xtUMk",
+    "state": "READY",
+    "node": "24.x"
+  },
+  "postgresql": {
+    "provider": "Neon",
+    "plan": "free",
+    "project": "salute-pay-testnet-demo",
+    "projectId": "ancient-voice-05929293",
+    "branchId": "br-empty-pine-baya8esa",
+    "region": "aws-eu-central-1",
+    "version": 16,
+    "schemaMigrated": true
+  },
+  "scheduler": {
+    "provider": "Neon Functions",
+    "function": "salutejobs",
+    "triggerId": "trigger-ac8d1a80-8869-4357-b0ff-fde38ea25d29",
+    "intervalSeconds": 60,
+    "authenticated": true,
+    "verifiedOccurrenceUtc": "2026-10-11T22:26:00Z",
+    "watcherErrors": 0
+  },
+  "verification": {
+    "publicHomepageStatus": 200,
+    "publicNetworksStatus": 200,
+    "readyTestnets": 8,
+    "databaseConfigured": true,
+    "unauthenticatedJobsStatus": 401,
+    "hostedPaymentLifecycle": "passed",
+    "evidence": "deployments/runs/2026-10-12/hosted-validation.json",
+    "walletConnectProjectConfigured": false,
+    "thirdPartyBrowserWalletPairingVerified": false
+  }
+}

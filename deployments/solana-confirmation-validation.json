@@ -1,0 +1,38 @@
+{
+  "at": "2026-10-11T16:29:32.917Z",
+  "chain": "solana",
+  "chainId": "devnet",
+  "program": "4soYk2h6YM9mAn3WWTCLgvzEGA5V1jWacupCASzY14zS",
+  "token": "HYYqqGLv2DjmpeHtMBeV8psRVBwwPvjjAW6XjTRwagKp",
+  "status": "passed",
+  "checks": [
+    "HTTP signature confirmation for SPL setup, public mint, deposit and settlement",
+    "merchant receives full balance with zero reward"
+  ],
+  "transactions": [
+    {
+      "kind": "SPL setup via HTTP confirmation",
+      "hash": "5qtLBDX9tjBtKjgkzaK1muHTxbRSrzKZbpyWVukpR1djkVnEqiH4sppZCfhXzLqCoN1qN4CzYCT1DYre4Tt41LnX",
+      "feeLamports": 10000,
+      "computeUnits": 77708
+    },
+    {
+      "kind": "public faucet via HTTP confirmation",
+      "hash": "5qX32W3sKr5CT9neZavj7vYJYrtuahPa6sqAYstjzDQCELK1pm9dbLMtuDCtG2Zv9SL97SD2w8en89i6KHraJFWj",
+      "feeLamports": 5000,
+      "computeUnits": 22664
+    },
+    {
+      "kind": "deposit",
+      "hash": "5a86xxu11XSgFBRWLek9NStu7G1AQqUE3B3XqfBkccLxWmCxtGqiptjrkXHx7ARJnTR7pcLx5vPBhuK1tinRsJVM",
+      "feeLamports": 5000,
+      "computeUnits": 105
+    },
+    {
+      "kind": "settle",
+      "hash": "5pvCJ2RJCP5vbz1R1jyYgRPxfz6Tzhf7aJkDnFWWJs2kiaw1sBifcsS7nE5YKYkWFoXstYybFijbsV1Huqd1MCJ2",
+      "feeLamports": 5000,
+      "computeUnits": 19206
+    }
+  ]
+}

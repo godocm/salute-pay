@@ -1,0 +1,341 @@
+{
+  "at": "2026-10-11T16:20:37.389Z",
+  "networks": {
+    "ethereum": {
+      "status": "passed",
+      "merchant": "0xe843A3a441392E106D16c461166Ae615d5Dc57e9",
+      "orderAddress": "0x48C1Ee802ABB21182DAD7eb49a57aC726fE10f49",
+      "checks": [
+        "EIP-712 binding",
+        "public faucet",
+        "funding before receiver deployment",
+        "10 underpayment -> 8 merchant + 2 reward",
+        "500 overpayment -> 498 merchant + 2 reward",
+        "late tiny deposit with waived reward",
+        "zero reward -> one payout transfer"
+      ],
+      "transactions": [
+        {
+          "hash": "0x73c5f3c4af0c0150ab1759527c8049083a4c68d0740127fbd4da6e063c5a0cf9",
+          "gasUsed": "42261"
+        },
+        {
+          "hash": "0x6267658b89109a1e5643963c9dbad20499876991aabfe376c3eb2c59f77672f0",
+          "gasUsed": "140446"
+        },
+        {
+          "hash": "0xba1a7f789a5136b7f1f305374a86dd4352f3d4b2d6ef5d1d0b3327f3233d182a",
+          "gasUsed": "740647"
+        },
+        {
+          "hash": "0xeb18af7810dd4bba2f7ad1446aa5d430f7f9c665fc49ed400f24e2ecd71cc262",
+          "gasUsed": "140446"
+        },
+        {
+          "hash": "0xfd1faac37f25d413ecbb1d04a2d8ad66899bbaeec7af99fa4a3308f6b0ef6034",
+          "gasUsed": "83253"
+        },
+        {
+          "hash": "0xd7b424d0c8d532c1e577e0c3af795179f0d70d885dc6307fa5f17256089fb6d7",
+          "gasUsed": "140446"
+        },
+        {
+          "hash": "0x39479ff1556ad57efbe342d05d52ece0391e5fec0cb76a40eae7e3d745bfa819",
+          "gasUsed": "69552"
+        },
+        {
+          "hash": "0x173259b5d1c88e5113adf1a85d6440706ad0a1e06a94f74cba76e4ff7b3efb3a",
+          "gasUsed": "140446"
+        },
+        {
+          "hash": "0x35ff677fe85589c87c841b7a73136ae7e469b30fc6e91819d4ce384eea5fe504",
+          "gasUsed": "625300"
+        }
+      ]
+    },
+    "arbitrum": {
+      "status": "passed",
+      "merchant": "0x42EB02D6A61d268a9201061CC564A9DFFCb68671",
+      "orderAddress": "0xf986711Ad1e8596589f9C2F91c7a93781FAc3ceC",
+      "checks": [
+        "EIP-712 binding",
+        "public faucet",
+        "funding before receiver deployment",
+        "10 underpayment -> 8 merchant + 2 reward",
+        "500 overpayment -> 498 merchant + 2 reward",
+        "late tiny deposit with waived reward",
+        "zero reward -> one payout transfer"
+      ],
+      "transactions": [
+        {
+          "hash": "0x777286466718a061e5e566be59ddc90f92394db5b4ed42322b9fc0665b3d0e6a",
+          "gasUsed": "33861"
+        },
+        {
+          "hash": "0x68f06f077dc939cef88c4ecda0e7ac81244cdf3d4aa5b4dc209c520a9132bb6a",
+          "gasUsed": "51226"
+        },
+        {
+          "hash": "0xfb26b262e067e3acce3b9255df2fc0ef2324bd793ce9ad29fd02380acb55f56b",
+          "gasUsed": "170709"
+        },
+        {
+          "hash": "0x2583f6733e91ca210d2de961dab7e60b2f8a29800f7144d4904cff86f2799351",
+          "gasUsed": "51226"
+        },
+        {
+          "hash": "0x629d36751814d38341233c2e59c5b4511fe2940b12bcb559a8af6adbd4de9f70",
+          "gasUsed": "72190"
+        },
+        {
+          "hash": "0xd08c47904625b13ae327a522d2a8603184b2f68aac715bcfc3a61cca1d67c97a",
+          "gasUsed": "51226"
+        },
+        {
+          "hash": "0xb396208ed99563305643ff9ebd86420e18f99a6881e1888b040b46cf981f83e4",
+          "gasUsed": "62263"
+        },
+        {
+          "hash": "0x96a0480d48da49677cc5df81bfa57e073dc7cccfe066ba99af91a7c42b266183",
+          "gasUsed": "51226"
+        },
+        {
+          "hash": "0xc5d3c3a628ef88a29eb00d3ac724137d2f606a7680d8d84dc788b5e80a982a3c",
+          "gasUsed": "143370"
+        }
+      ]
+    },
+    "robinhood": {
+      "status": "passed",
+      "merchant": "0xAc6491031114D267ee5905F3FE98b36291e07516",
+      "orderAddress": "0x619D004d723077fF5365af114DE2D39626aD7Ca4",
+      "checks": [
+        "EIP-712 binding",
+        "public faucet",
+        "funding before receiver deployment",
+        "10 underpayment -> 8 merchant + 2 reward",
+        "500 overpayment -> 498 merchant + 2 reward",
+        "late tiny deposit with waived reward",
+        "zero reward -> one payout transfer"
+      ],
+      "transactions": [
+        {
+          "hash": "0xe626902a5e79aa16190aa4aa662971407c6e0daa23529182da18a37a42083250",
+          "gasUsed": "33861"
+        },
+        {
+          "hash": "0x958532d2cd9d4a875d932ba76b4d97d4ffd82b3b71547cefbd96a8b3d1971e1c",
+          "gasUsed": "51214"
+        },
+        {
+          "hash": "0x35d755a83c92143fe28d97f3bb588dfe51777e87e226dea5c33427f2ac43a029",
+          "gasUsed": "170697"
+        },
+        {
+          "hash": "0xfc9f0f2b6bba2e80d636d5d3f704ada7de36cd8cc7bd96eb0199e7673284b4c2",
+          "gasUsed": "51214"
+        },
+        {
+          "hash": "0x43ef2b7866614f3fcfde4dc537e8ead4abdbf4ddc04532e3038ede0447ede3ab",
+          "gasUsed": "72178"
+        },
+        {
+          "hash": "0x678338acddf8dbc44375f2d03f51b8b4993fde6c82c84bfc8dd7b95e6169d7bb",
+          "gasUsed": "51214"
+        },
+        {
+          "hash": "0x9da341c7eb05ed648e5914e554ea9b3c92db4b2d7a9d00cb8e56c4eace113c82",
+          "gasUsed": "62251"
+        },
+        {
+          "hash": "0x070075d665261a1967c9a7ae907405b4ce8618bcd4b2bbe0ffad02cac220baf5",
+          "gasUsed": "51226"
+        },
+        {
+          "hash": "0x2879468a616063162e44d149a000ce2735f4a47432d787b1e153316fa0704c55",
+          "gasUsed": "143358"
+        }
+      ]
+    },
+    "tempo": {
+      "status": "passed",
+      "merchant": "0x5656B7a5Ae8DbFe753f7C2f216467ecC350d8A83",
+      "orderAddress": "0x916ABB5a03ECF8Ec1fA315D72b7A89b9561133E5",
+      "checks": [
+        "EIP-712 binding",
+        "public faucet",
+        "funding before receiver deployment",
+        "10 underpayment -> 8 merchant + 2 reward",
+        "500 overpayment -> 498 merchant + 2 reward",
+        "late tiny deposit with waived reward",
+        "zero reward -> one payout transfer"
+      ],
+      "transactions": [
+        {
+          "hash": "0xf498337a309825b6baecfff80eb42ad112684530ccd516d9d4f22edc080ac580",
+          "gasUsed": "23588"
+        },
+        {
+          "hash": "0xad8795c03692797d58db326001b4b66506f60f49f196575d0c86b2e15857347e",
+          "gasUsed": "48626"
+        },
+        {
+          "hash": "0xf401c6738edbc208fc99ff8554b1dc9f34a407efbba1acfd6685c3f9aa03c531",
+          "gasUsed": "289242"
+        },
+        {
+          "hash": "0x2107d82d43f9d5b4c688277f18a36ef75dbfe8fb32af81bf9fe96077d5cf6476",
+          "gasUsed": "829023"
+        },
+        {
+          "hash": "0xf331a56e49b069d804cc5ca8a78c59f378753a1b7c091377a0aeb435853a348c",
+          "gasUsed": "289242"
+        },
+        {
+          "hash": "0xd1c073923c733c022a63875759c950e06435b4c5acaadde93907f201fa07459f",
+          "gasUsed": "87704"
+        },
+        {
+          "hash": "0xe8d79be1c7177149b58a12e193b02dcec7a044f5e4ce549940659a950fcabe01",
+          "gasUsed": "44242"
+        },
+        {
+          "hash": "0xc9ef2ba858b311c9bf95109088e7cf1eb9aa4a6c945444680c4657b963010f83",
+          "gasUsed": "76383"
+        },
+        {
+          "hash": "0xf2050d0fdfc72d780526d5b1d1f15b89612805f4b15e6e65c27b0becd006234b",
+          "gasUsed": "44242"
+        },
+        {
+          "hash": "0xb88189f16852009b2e14f35185972107fe65e09f82102d19f77969f02a2b99b2",
+          "gasUsed": "815234"
+        }
+      ]
+    },
+    "bnb": {
+      "status": "passed",
+      "merchant": "0x04364Be54b5004CeC74e73418d3648951bF1E117",
+      "orderAddress": "0x5b84c20497De70046876A28928635d4Eab201543",
+      "checks": [
+        "EIP-712 binding",
+        "public faucet",
+        "funding before receiver deployment",
+        "10 underpayment -> 8 merchant + 2 reward",
+        "500 overpayment -> 498 merchant + 2 reward",
+        "late tiny deposit with waived reward",
+        "zero reward -> one payout transfer"
+      ],
+      "transactions": [
+        {
+          "hash": "0xd0d2b9832598d8cbcdd2b2cc8a4151192793e744c1006b5d8355dbdea0047f84",
+          "gasUsed": "33861"
+        },
+        {
+          "hash": "0xd6e855fa1684d4fea010e530d65023efe6aef9ec1473bb6db57311688bf5aee3",
+          "gasUsed": "51226"
+        },
+        {
+          "hash": "0x1a516b0d56515f506dcddc221a4183d4d9b805ddedc5f15dd8fd0c48834e1d7b",
+          "gasUsed": "170685"
+        },
+        {
+          "hash": "0xe982d53197a1b850c33897266b1d317c779aaa9b111f8a6c18b34eb84189667b",
+          "gasUsed": "51226"
+        },
+        {
+          "hash": "0x2297aa09ecff33951dbf0fbc03d6db0ff78badfb8e5bb51b5a8c8d7f07b973e5",
+          "gasUsed": "72166"
+        },
+        {
+          "hash": "0xcbb184dfcc214386885b0030bc9da1735e25968f56c2f528e4d5e0b860b54092",
+          "gasUsed": "51226"
+        },
+        {
+          "hash": "0xeb402c22791fa194abe4724824d6509c0932bdf28940272cba5c2b5cbc372c04",
+          "gasUsed": "62239"
+        },
+        {
+          "hash": "0xcbb38f7c7f55f5f3de4e6b48139d02eede3a3e76eea306587b3f3155d22d198f",
+          "gasUsed": "51226"
+        },
+        {
+          "hash": "0xa62e4e10d06b6b0954880dbc6bf548afbe5d009bc32430e57aecb2db13be749b",
+          "gasUsed": "143334"
+        }
+      ]
+    },
+    "base": {
+      "status": "passed",
+      "merchant": "0xe0a4d766ab05e559A327099485A320e71b272E75",
+      "orderAddress": "0x49C699399E15408D09FBd7647FCdd8334F1EDBB6",
+      "checks": [
+        "EIP-712 binding",
+        "public faucet",
+        "funding before receiver deployment",
+        "10 underpayment -> 8 merchant + 2 reward",
+        "500 overpayment -> 498 merchant + 2 reward",
+        "late tiny deposit with waived reward",
+        "zero reward -> one payout transfer"
+      ],
+      "transactions": [
+        {
+          "hash": "0x5635767eed4965c1db066f8576fedbf4ee16051b360dbf4658f5b9c3bd2353a1",
+          "gasUsed": "33861"
+        },
+        {
+          "hash": "0xebaa6d8f40c9c7bedc89ce4af77d97af5a9d5498018b44db14550bf6872b2bd4",
+          "gasUsed": "51226"
+        },
+        {
+          "hash": "0x3bcc5c317a90ed1e1520c0809b74f9b9fb162c5b7d656bf33a9de3edb155a2a2",
+          "gasUsed": "170709"
+        },
+        {
+          "hash": "0x230cd7cae42af4d5d43c18226bf95de46cb4c5fd471db8011f99c2b33f5b44e1",
+          "gasUsed": "51226"
+        },
+        {
+          "hash": "0x944bc00906f17819a4fb8e91f8ee3ac057e782172318ba393f13bdeca26d0551",
+          "gasUsed": "72190"
+        },
+        {
+          "hash": "0x308d184d1094cf6a69af69a496a74413945ed1fdf92733bf2d5d32d2741912f7",
+          "gasUsed": "51226"
+        },
+        {
+          "hash": "0xf0c24894b170fa942ca4c786615db1247eccfa7dea2dd64a0f451dab2a6a7bda",
+          "gasUsed": "62263"
+        },
+        {
+          "hash": "0x65daf57f4cd1a9507c6dbd8a914d93c20e2484bb2c8f86869882f385f93df9f4",
+          "gasUsed": "51226"
+        },
+        {
+          "hash": "0x2f582746bbef4bd8ad71df1b1118ca4872c67baa638352089ccb04ac7bf4c54c",
+          "gasUsed": "143370"
+        }
+      ]
+    }
+  },
+  "crossChain": {
+    "status": "passed",
+    "origin": "ethereum",
+    "execution": "arbitrum",
+    "sameAddress": "0x2fC567ba789cc35629a520Ff67B48a6899124a3a",
+    "checks": [
+      "unchanged origin-signed intent",
+      "same receiver address across chains",
+      "actual-asset recovery to immutable merchant",
+      "foreign default zero reward",
+      "execution-chain reward quote",
+      "quote nonce replay rejected"
+    ],
+    "transactionHashes": [
+      "0xa29ce9b30917d3ed973076e5fa061bb4adebe6f8bf9bfef223cf6d42e39a91cc",
+      "0x067cf51c6caf484fe07be52ecdcfadf8c5415bd09763c8f7644469c9a3e78da7",
+      "0xc13c42b65d93414807c4dea8191b8f285632c54e03e320e4e18cc9fbd96fb718",
+      "0x091949794eaa472a89de17ef2d4c2ecd3cca40f29c39c16b97bc6faf25c2491e"
+    ]
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "at": "2026-10-11T16:25:48.446Z",
+  "origin": "ethereum",
+  "networks": {
+    "base": {
+      "status": "passed",
+      "sameAddress": "0xE71811f15C73D6E3e2326E120618e807B4C9f2eC",
+      "checks": [
+        "unchanged Ethereum-origin signed intent",
+        "canonical receiver address equality",
+        "foreign-chain token recovery with zero default reward",
+        "execution-chain reward quote and nonce replay rejection",
+        "wrong native asset recovery to immutable merchant",
+        "native underpayment and overpayment with per-sweep rewards"
+      ],
+      "transactions": [
+        {
+          "hash": "0x3ccaf3f26b66a09a419a76b72c52363744a38f64c9a2d76c0bd2682998d37088",
+          "gasUsed": "51238"
+        },
+        {
+          "hash": "0xcb0e29bad4365f2e238b71c782cc9a22a22b56078821cb4f492d28781bff7adf",
+          "gasUsed": "160783"
+        },
+        {
+          "hash": "0x8d19227f08556aa4f107bc3554f33e014bf85dcfa0f7be276da231eb786021e9",
+          "gasUsed": "51226"
+        },
+        {
+          "hash": "0x2710b06570932ec2ef53f03c44c84c7f47e0f62d9a27ccaed3869e4af0573063",
+          "gasUsed": "104035"
+        },
+        {
+          "hash": "0xd312cf6728e940359695001e1f189573670fe71af8a65a09bfc0406b2fd20fda",
+          "gasUsed": "23719"
+        },
+        {
+          "hash": "0x1c0b8aacdf28d20d223e44bc94fc0b831ba70ecc2ef878d0588b870db9cecf88",
+          "gasUsed": "82051"
+        },
+        {
+          "hash": "0xe056ae1154360efeefca4a5e2826b60b9fb9e2ebcc0e79d3e413ba53b9fc4b69",
+          "gasUsed": "21000"
+        },
+        {
+          "hash": "0x58b9ab96b2058c49c73f85ab198fd0f25111d424aa6938e4bfa31bd0fc4b5b52",
+          "gasUsed": "145176"
+        },
+        {
+          "hash": "0x50c3e6b0cbf22b2b59cdf73f556c555d1f1672ed90c4a23143f44e7df831511f",
+          "gasUsed": "23719"
+        },
+        {
+          "hash": "0x2da6c4e4ed924493b66f44f1fc34b61a856db66606712ba935c340de137b873a",
+          "gasUsed": "63757"
+        }
+      ]
+    },
+    "bnb": {
+      "status": "passed",
+      "sameAddress": "0xE71811f15C73D6E3e2326E120618e807B4C9f2eC",
+      "checks": [
+        "unchanged Ethereum-origin signed intent",
+        "canonical receiver address equality",
+        "foreign-chain token recovery with zero default reward",
+        "execution-chain reward quote and nonce replay rejection",
+        "wrong native asset recovery to immutable merchant",
+        "native underpayment and overpayment with per-sweep rewards"
+      ],
+      "transactions": [
+        {
+          "hash": "0xdf8a878b365f37c45297b46189208a2618826ace4eb76ffed04acdc16f00bdac",
+          "gasUsed": "51238"
+        },
+        {
+          "hash": "0x33d7ae083940bfbf567ce5b400826fa36ec0423457238c6dc5317d28538386a0",
+          "gasUsed": "160783"
+        },
+        {
+          "hash": "0xa53798f1ed9c07a11f03576dc4d07942f0941d152cd502655f17bd7f736419d4",
+          "gasUsed": "51226"
+        },
+        {
+          "hash": "0x890058fd09a3fbfbb3aabe9b42e8c0fb00ec4464439273257ac1f95bc10d22bf",
+          "gasUsed": "104035"
+        },
+        {
+          "hash": "0x8f6545a2394c93d301d74cc6e07a4dc3c13fb0bae9a317fc525fc25dc125cd07",
+          "gasUsed": "23719"
+        },
+        {
+          "hash": "0x5f8fcea200faa29edc8d6842d1b27b66e5170dd7a6e8209970cfaf10404b97c9",
+          "gasUsed": "82051"
+        },
+        {
+          "hash": "0x839d5d09e1cdc6dda6e742ece5218e7e1b6e2669a8669027d79eb376753511a6",
+          "gasUsed": "21000"
+        },
+        {
+          "hash": "0xd0cbefc719393c9d3232d6b951711d397d6aa23e91a48df4be89c12fd8e26dfa",
+          "gasUsed": "145152"
+        },
+        {
+          "hash": "0xc8b47e65022fbfa1b5186175f73720665396f8195fb6a74c2a3f83489e0a0a5e",
+          "gasUsed": "23719"
+        },
+        {
+          "hash": "0x25c330c2a9ac83cddc84adda3c84cf34e9a3b36b85b7c310c9f36526dfc18fcb",
+          "gasUsed": "63733"
+        }
+      ]
+    }
+  }
+}

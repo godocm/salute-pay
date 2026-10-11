@@ -18,7 +18,7 @@ export function compileContracts() {
     viaIR: true,
     evmVersion: 'shanghai',
     metadata: { bytecodeHash: 'none' },
-    outputSelection: { '*': { '*': ['abi', 'evm.bytecode.object', 'evm.deployedBytecode.object'] } },
+    outputSelection: { '*': { '*': ['abi', 'evm.bytecode.object', 'evm.deployedBytecode.object', 'evm.deployedBytecode.immutableReferences'] } },
   };
   const sources = Object.fromEntries(solidityFiles(path.join(root, 'contracts')).map(file => [
     path.relative(root, file).split(path.sep).join('/'), { content: fs.readFileSync(file, 'utf8') },
@@ -44,6 +44,7 @@ export function compileContracts() {
         abi: result.abi,
         bytecode: `0x${result.evm.bytecode.object}`,
         deployedBytecode: `0x${result.evm.deployedBytecode.object}`,
+        immutableReferences: result.evm.deployedBytecode.immutableReferences || {},
       };
       artifacts[contractName] = artifact;
       fs.writeFileSync(path.join(root, 'artifacts', `${contractName}.json`), JSON.stringify(artifact, null, 2) + '\n');
