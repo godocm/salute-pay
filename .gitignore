@@ -27,3 +27,4 @@ solana/node_modules/
 solana/*.keypair.json
 tron/node_modules/
 tron/build/
+.vercel
