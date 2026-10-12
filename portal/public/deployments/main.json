@@ -1,0 +1,87 @@
+{
+  "protocol": 4,
+  "networks": {
+    "ethereum": {
+      "chain": "ethereum",
+      "chainId": "11155111",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x8702f26D04d2234440Ca698e15896FA3C0A043cF",
+      "domain": "",
+      "status": "ready",
+      "environment": "testnet",
+      "confirmations": 2
+    },
+    "arbitrum": {
+      "chain": "arbitrum",
+      "chainId": "421614",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x97BB91AF514D4c9984f3fEb671db5cA30e076F03",
+      "domain": "",
+      "status": "ready",
+      "environment": "testnet",
+      "confirmations": 2
+    },
+    "robinhood": {
+      "chain": "robinhood",
+      "chainId": "46630",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x97BB91AF514D4c9984f3fEb671db5cA30e076F03",
+      "domain": "",
+      "status": "ready",
+      "environment": "testnet",
+      "confirmations": 2
+    },
+    "tron": {
+      "chain": "tron",
+      "chainId": "3448148188",
+      "deployment": "TNSjMTiHYgM1nvFxZ6iDcqMMxjZqhX4LcL",
+      "token": "TMJJzx2mo1fP7pWT43Vgw4zBAAEaS3TgGL",
+      "domain": "",
+      "status": "ready",
+      "environment": "testnet",
+      "confirmations": 2
+    },
+    "tempo": {
+      "chain": "tempo",
+      "chainId": "42431",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x20c0000000000000000000001Debe449002EAb92",
+      "domain": "",
+      "feeToken": "0x20c0000000000000000000000000000000000001",
+      "faucet": "0x562dbf71af7AA82D2C4a9524Ed06E37044570a37",
+      "status": "ready",
+      "environment": "testnet",
+      "confirmations": 2
+    },
+    "bnb": {
+      "chain": "bnb",
+      "chainId": "97",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x97BB91AF514D4c9984f3fEb671db5cA30e076F03",
+      "domain": "",
+      "status": "ready",
+      "environment": "testnet",
+      "confirmations": 2
+    },
+    "base": {
+      "chain": "base",
+      "chainId": "84532",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "token": "0x97BB91AF514D4c9984f3fEb671db5cA30e076F03",
+      "domain": "",
+      "status": "ready",
+      "environment": "testnet",
+      "confirmations": 2
+    },
+    "solana": {
+      "chain": "solana",
+      "chainId": "devnet",
+      "deployment": "4soYk2h6YM9mAn3WWTCLgvzEGA5V1jWacupCASzY14zS",
+      "token": "HYYqqGLv2DjmpeHtMBeV8psRVBwwPvjjAW6XjTRwagKp",
+      "domain": "3292b0a10ea716fb77d5a951acef59c2c6b0dec5850e1f6feb40da7386991ffe",
+      "status": "ready",
+      "environment": "testnet",
+      "confirmations": 2
+    }
+  }
+}

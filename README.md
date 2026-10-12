@@ -8,6 +8,12 @@ Tempo and Solana are primary networks. Ethereum, Base, Arbitrum, BNB Smart Chain
 
 Use Node 24, `npm install`, `npm --prefix portal install`, `npm --prefix tron install`, and `npm --prefix solana install`. `npm run dev` serves the frontend on loopback 5173. `npm run build` compiles EVM/TRON, exports main ABIs and builds the Next.js app. `npm test` runs isolated main EVM/CLI checks. Preserve `.data` across every run.
 
+The portal source is included directly in this repository; a normal clone includes the dashboard and its API. No submodule setup is required. For a three-minute product recording, use [the demo walkthrough](docs/DEMO.md). Run `npm run test:ui` for invoice-status and executor-review checks.
+
+Customer wallet connection is optional: copy or scan the order address and send the specified asset on the specified network. Merchants sign order terms and executors sign collection transactions. The current public demo uses testnets and valueless test assets; commercial exchanges generally cannot fund these testnet assets.
+
+Hosted links provide cumulative receipt-based accounting, public executor discovery and optional webhooks within dashboard plan limits. Disable **Publish a hosted payment link** to create an offline signed link on any activated rail. Export the signed order for independent execution. Offline links show current balances, not trusted cumulative payment history.
+
 [Architecture](docs/ARCHITECTURE.md) explains EIP-712/Ed25519/TIP-712 authorization, cross-chain recovery, partial/excess deposits, rewards, gas and webhook design. [Deployment](docs/DEPLOYMENT.md) explains Vercel, PostgreSQL/Neon, wallet connector setup, testnets and runtime validation.
 
 The main contracts have no EVM/TRON payout admin. EVM recovery requires matching canonical factory deployments and pays assets on the chain where they arrived. Solana/TRON are separate rails. Zero reward means only the merchant payout; the executor still sponsors transaction costs. No customer refunds, token conversion, issuer-freeze bypass or cross-chain bridging are implemented. Fee-on-transfer/rebasing tokens are unsupported.

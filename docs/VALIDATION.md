@@ -1,6 +1,6 @@
 # Main implementation validation
 
-Public-chain validation on 2026-10-11; website revisions checked on 2026-10-12. Eight public testnets are deployed and exercised. Cloud hosting/database are not yet configured.
+Public-chain validation on 2026-10-11 and 2026-10-12; website revisions checked on 2026-10-12. Eight public testnets are deployed and exercised. The hosted Vercel demo, Neon PostgreSQL and scheduled watcher are configured; see `docs/DEPLOYMENT.md`. Earlier “not configured” notes below describe historical checks, not the current hosting state.
 
 ## Public testnet evidence
 
@@ -26,6 +26,20 @@ Ganache ERC20 simulation gas: first sponsored collection 160,446; repeated spons
 
 This is prototype testing, not an independent audit. Actual WalletConnect pairing remains dependent on the operator project ID and a compatible external wallet. Pricing support promises require operational staffing; subscription checkout is not implemented.
 
+## Submission release checks · 2026-10-12
+
+- Changed the headline to “No custody. No fees. No wallet connection.” with an adjacent 0% collection-fee qualification and an explicit customer-transfer explanation. Merchants and executors still sign with wallets.
+- Executor queue filters by network and defaults to funded orders, supports hosted-link/offline-link/JSON import, and refreshes indexed snapshots every 20 seconds while visible. Selection verifies the live chain balance. Order identity includes chain, chain ID, deployment and address.
+- Collection review handles case-sensitive Solana/TRON identities, zero rewards, self-collection and tiny sponsored balances. A changed balance requires another review; a pending collection blocks another submission in this browser until receipt reconciliation. Uncertain RPC errors retain pending status. A confirmed collection remains successful when receipt reporting or balance refresh is unavailable.
+- Recovery receipts use the actual execution-chain explorer, preserve pending/reverted/replaced status, and reject a quote whose asset differs from the selected recovery asset. These checks do not add bridging or refunds.
+- Added explicit offline-link creation on every activated rail without hosted-plan publication, order-backup guidance, clipboard/import error messages, and wallet/network-change invalidation for EVM. Hidden WalletConnect when its project ID is absent. Browser storage failures do not relabel mined transfers as failures, and historical stored orders are preserved.
+- Flattened the portal into the parent Git repository for a complete reviewable checkout. Preserved the prior portal history locally under ignored `.data/portal-git-history-20261012`. No deployment/state or secret files are part of that source change.
+- `npm test`: 15 contract/CLI/scheduler checks pass. `npm run test:ui`: four invoice-status, plan, payout-preview and post-confirmation outage checks pass. PostgreSQL integration passes sessions, ownership, concurrent quotas, verified receipts, outbox/HMAC and SSRF checks.
+- EVM wallet-client checks pass signing, partial/excess deposits, repeated rewards, account changes, tiny sponsorship, and storage-failure execution. Actual Tempo runtime/wallet checks pass. Actual Solana runtime/Wallet Standard checks pass native prefunding, SPL setup, partial/excess/late deposits and sponsored/repeated rewards. Isolated TRON runtime checks pass all four collection tests.
+- Browser QA covers the updated headline, mobile homepage/executor layouts without horizontal overflow, network switching, disabled execution without a wallet and invalid import feedback. Real third-party wallet approvals were not performed through the browser in this release; rehearse the intended wallet before filming.
+- Full contract/ABI/portal build and TypeScript checks pass. No public-chain transactions or new contract deployments are sent as routine release tests. Existing public receipt evidence remains in `deployments/`.
+- `docs/DEMO.md` supplies a 180-second recording outline, testnet preparation, receipt/webhook proof and honest feature boundaries. Source deployment does not update or submit the Arena draft.
+
 ## Website and launch checks · 2026-10-12
 
 - New headline, route-mark logo and favicon; main navigation uses Chains, About, Developer docs, Pricing and Launch app. Payments is retained only as the app workspace tab.
@@ -34,7 +48,7 @@ This is prototype testing, not an independent audit. Actual WalletConnect pairin
 - The docs still derive eight factory/program addresses from the verified public registry. Each chain page links to its individual deployment anchor.
 - Retired network entries were removed from supported configuration, public fallback registries and unfunded skipped reports; funded historical records and `.data` remain untouched. Unknown network overrides are ignored by the publisher.
 - PostgreSQL integration passes after starting a named isolated loopback PostgreSQL test container. It covers wallet sessions, quotas, signed publication, receipt-based accounting, webhook signatures, job authorization and SSRF protections. No public-chain transactions were sent for these website revisions.
-- Local production settings are absent: no cloud database, canonical HTTPS origin, job secret or Reown project ID is configured. Hosted wallet pairing and receipt/webhook delivery still require the launch walkthrough in `docs/DEPLOYMENT.md`.
+- At this earlier check, production settings were absent. The subsequent launch configured cloud PostgreSQL, a canonical HTTPS origin, job authorization and scheduling. Reown/WalletConnect configuration remains separate; use compatible injected wallets for the current hosted demo.
 - Default Vercel configuration omits cron to avoid Hobby deployment rejection. Optional paid-plan configuration supplies minute scheduling; an external scheduler must honor endpoint authorization and runtime limits.
 - The landing page now uses Salute Bank's navy/blue palette, an interactive create/pay/collect preview, selectable networks/assets and partial/excess/sponsored-payment controls. Other route layouts are retained with the shared blue palette. Beta/testnet labels remain visible.
 - The homepage comparison names Salute Bank, Request Network and Salute Pay, distinguishes Request's 0.9% service pricing and included EVM gas from Salute's infrastructure tiers, and labels Salute AML as unimplemented roadmap work. Free/Growth/Scale chain eligibility is shared between browser and publisher; two status/plan unit tests pass.

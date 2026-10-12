@@ -1,0 +1,57 @@
+{
+  "ethereum": {
+    "name": "Ethereum Sepolia",
+    "chainId": "11155111",
+    "rpc": "https://ethereum-sepolia-rpc.publicnode.com",
+    "explorer": "https://sepolia.etherscan.io",
+    "gas": "ETH",
+    "native": true,
+    "docs": "https://ethereum.org/en/developers/docs/networks/"
+  },
+  "base": {
+    "name": "Base Sepolia",
+    "chainId": "84532",
+    "rpc": "https://sepolia.base.org",
+    "explorer": "https://sepolia.basescan.org",
+    "gas": "ETH",
+    "native": true,
+    "docs": "https://docs.base.org/get-started/connect-to-base"
+  },
+  "arbitrum": {
+    "name": "Arbitrum Sepolia",
+    "chainId": "421614",
+    "rpc": "https://sepolia-rollup.arbitrum.io/rpc",
+    "explorer": "https://sepolia.arbiscan.io",
+    "gas": "ETH",
+    "native": true,
+    "docs": "https://docs.arbitrum.io/chain-info"
+  },
+  "tempo": {
+    "name": "Tempo Moderato",
+    "chainId": "42431",
+    "rpc": "https://rpc.moderato.tempo.xyz",
+    "explorer": "https://explore.testnet.tempo.xyz",
+    "gas": "USD",
+    "native": false,
+    "feeToken": "0x20c0000000000000000000000000000000000001",
+    "docs": "https://tempo.xyz/developers/docs/quickstart/evm-compatibility"
+  },
+  "robinhood": {
+    "name": "Robinhood Testnet",
+    "chainId": "46630",
+    "rpc": "https://rpc.testnet.chain.robinhood.com",
+    "explorer": "https://explorer.testnet.chain.robinhood.com",
+    "gas": "ETH",
+    "native": true,
+    "docs": "https://docs.robinhood.com/chain/connecting/"
+  },
+  "bnb": {
+    "name": "BNB Smart Chain Testnet",
+    "chainId": "97",
+    "rpc": "https://bsc-testnet-rpc.publicnode.com",
+    "explorer": "https://testnet.bscscan.com",
+    "gas": "BNB",
+    "native": true,
+    "docs": "https://docs.bnbchain.org/bnb-smart-chain/developers/network-configuration/"
+  }
+}

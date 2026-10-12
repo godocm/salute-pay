@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Integration docs · Salute Pay</title>
+    <meta
+      name="description"
+      content="Merchant-owned payment links, permissionless collection and optional Salute infrastructure."
+    />
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="stylesheet" href="/pages.css" />
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/"
+        ><img src="/favicon.svg" width="36" height="36" alt="" />Salute
+        <small>Pay</small></a
+      >
+      <nav aria-label="Main navigation">
+        <a href="/about">About</a><a href="/chains">Chains</a
+        ><a href="/pricing.html">Pricing</a><a href="/docs">Developer docs</a>
+        <a href="https://salutebank.com">Custodial <span aria-hidden="true">↗</span></a>
+        <a class="button nav-launch" href="/app">Launch app ↗</a>
+      </nav>
+    </header>
+    <main class="wrap">
+      <section class="intro">
+        <span class="eyebrow">INTEGRATION GUIDE</span>
+        <h1>Signed orders.<br />Verified receipts.</h1>
+        <p>
+          Connect merchant-owned payment links to your app using the publisher
+          API and signed webhooks. This infrastructure never signs custody
+          transactions.
+        </p>
+      </section>
+      <nav class="subnav">
+        <a href="#flow">Payment flow</a><a href="#api">API</a
+        ><a href="#webhooks">Webhooks</a
+        ><a href="#contracts">Contract workflow</a
+        ><a href="#recovery">Recovery</a>
+      </nav>
+      <div class="note">
+        Test environments only until deployments are verified and activated. The
+        API is same-origin and authenticated with a wallet session. Database
+        credentials and webhook secrets belong on your server, never in browser
+        code.
+      </div>
+      <section class="section" id="flow">
+        <h2>1. Create, publish, pay, collect</h2>
+        <ol>
+          <li>
+            Merchant connects the appropriate wallet: EVM browser wallet /
+            WalletConnect, Solana Wallet Standard, or TronLink.
+          </li>
+          <li>
+            Merchant signs order terms off-chain. EVM uses EIP-712; Solana uses
+            an Ed25519 message; TRON uses TIP-712.
+          </li>
+          <li>
+            The signed order is verified and published. Its separate
+            <code>/pay/{slug}</code> page carries the QR code, unique address,
+            invoice amount and network.
+          </li>
+          <li>
+            The customer funds the address from a wallet or exchange. For SPL
+            tokens, the merchant prepares the token-account address before
+            sharing it.
+          </li>
+          <li>
+            An executor connects their own wallet, reviews payout terms and
+            collects. Funds reach the immutable merchant, minus an authorized
+            per-sweep reward.
+          </li>
+          <li>
+            The watcher verifies chain receipts and sends webhooks. Do not
+            fulfil an invoice from a browser-submitted transaction hash alone.
+          </li>
+        </ol>
+        <p>
+          Repeated deposits remain collectable. Each sweep can pay the fixed
+          reward. A zero reward or an explicit waiver performs only the merchant
+          payout; the executor still pays network costs. A merchant can sponsor
+          collection by executing it with their own wallet.
+        </p>
+      </section>
+      <section class="section" id="api">
+        <h2>2. Publisher API</h2>
+        <p>
+          Fetch <code>/api/networks</code> for activated deployments.
+          Authenticate using a wallet-signed challenge. The session cookie is
+          HttpOnly and same-origin; write requests require the app origin.
+        </p>
+        <div class="api-list">
+          <div class="api-row">
+            <b>GET /api/networks</b>
+            <p>
+              Activated public deployment metadata; no wallet keys or private
+              RPC credentials.
+            </p>
+          </div>
+          <div class="api-row">
+            <b>POST /api/auth/challenge</b>
+            <p>
+              Send {chain,address}; receive {id,message}. Sign the exact message
+              with your wallet.
+            </p>
+          </div>
+          <div class="api-row">
+            <b>POST /api/auth/verify</b>
+            <p>
+              Send {id,signature}. Receives a 12-hour merchant session cookie.
+              Challenges expire after 5 minutes and are single-use.
+            </p>
+          </div>
+          <div class="api-row">
+            <b>GET /api/me</b>
+            <p>
+              Merchant plan, monthly usage, webhook URL and signing secret.
+              Authenticated merchant only.
+            </p>
+          </div>
+          <div class="api-row">
+            <b>PUT /api/settings</b>
+            <p>
+              Send {webhookUrl}. A public HTTPS hostname is required. Send an
+              empty URL to disable delivery.
+            </p>
+          </div>
+          <div class="api-row">
+            <b>POST /api/payments</b>
+            <p>
+              Send signed payment JSON exported from the app. Server verifies
+              authorization, deployment and address; monthly dashboard limits
+              are enforced atomically.
+            </p>
+          </div>
+          <div class="api-row">
+            <b>GET /api/payments</b>
+            <p>Authenticated merchant payment list.</p>
+          </div>
+          <div class="api-row">
+            <b>GET /api/payments/{slug}</b>
+            <p>
+              Public signed payment data, cumulative invoice-asset amounts and
+              collection receipts. Anyone holding the link can view it.
+            </p>
+          </div>
+          <div class="api-row">
+            <b>GET /api/public-orders</b>
+            <p>Only orders the merchant elected to publish to executors.</p>
+          </div>
+          <div class="api-row">
+            <b>POST /api/payments/{slug}/transactions</b>
+            <p>
+              Send {chain,hash}. This queues chain verification; it never marks
+              a payment as paid by itself.
+            </p>
+          </div>
+          <div class="api-row">
+            <b>POST /api/auth/logout</b>
+            <p>Revoke the current session.</p>
+          </div>
+        </div>
+        <h3 style="margin-top: 25px">EVM session example</h3>
+        <pre><code>import { BrowserProvider } from &quot;ethers&quot;;
+const provider = new BrowserProvider(window.ethereum);
+await provider.send(&quot;eth_requestAccounts&quot;, []);
+const signer = await provider.getSigner();
+const request = async (path, data) =&gt; {
+  const response = await fetch(`/api/${path}`, {
+    method: &quot;POST&quot;, headers: { &quot;content-type&quot;: &quot;application/json&quot; },
+    body: JSON.stringify(data)
+  });
+  const result = await response.json();
+  if (!response.ok) throw new Error(result.error);
+  return result;
+};
+const challenge = await request(&quot;auth/challenge&quot;, {
+  chain: &quot;ethereum&quot;, address: await signer.getAddress()
+});
+await request(&quot;auth/verify&quot;, {
+  id: challenge.id, signature: await signer.signMessage(challenge.message)
+});
+// signedOrder is the exported merchant-signed JSON from Salute.
+const payment = await request(&quot;payments&quot;, signedOrder);
+const checkoutURL = `${location.origin}/pay/${payment.slug}`;</code></pre>
+        <p>
+          Order amounts and rewards are base-unit strings. EVM portable orders
+          bind <code>originChainId</code> in addition to ID, merchant, token,
+          amount and executor fee. Reference text is display metadata, not an
+          on-chain invoice description.
+        </p>
+      </section>
+      <section class="section" id="webhooks">
+        <h2>3. Webhook delivery</h2>
+        <p>
+          Connect your wallet in Developer settings, sign in, save a webhook URL
+          and copy its signing secret into your server environment. New payment
+          creation defaults the webhook checkbox on when a URL exists; you can
+          disable it for a particular order.
+        </p>
+        <ul>
+          <li>
+            <code>payment.created</code>: verified signed order published.
+          </li>
+          <li>
+            <code>payment.partially_paid</code>: new confirmed invoice-asset
+            funds bring cumulative received below the invoice amount.
+          </li>
+          <li>
+            <code>payment.paid</code>: confirmed cumulative invoice-asset funds
+            meet or exceed the invoice amount.
+          </li>
+          <li>
+            <code>payment.overpaid</code>: confirmed cumulative invoice-asset
+            funds exceed the invoice. The paid event is also emitted for
+            compatibility.
+          </li>
+          <li>
+            <code>payment.collected</code>: confirmed collection, including
+            actual chain, actual asset, merchant receipt and executor reward.
+          </li>
+        </ul>
+        <p>
+          Underpayment, overpayment and repeated deposits do not change the
+          merchant destination. Wrong-chain/wrong-token collections produce
+          receipts but do not automatically satisfy the original invoice. A paid
+          event reports customer funding, not necessarily completed merchant
+          collection.
+        </p>
+        <p>
+          Deliveries are at least once. Deduplicate
+          <code>salute-event-id</code>. The worker retries failures with backoff
+          up to eight attempts; only 2xx responses acknowledge delivery.
+          Redirects are not followed. An authenticated scheduler must invoke the
+          watcher and sender; no long-running worker is assumed inside Vercel.
+        </p>
+        <h3>Verify the exact raw body</h3>
+        <pre><code>import { createHmac, timingSafeEqual } from &quot;node:crypto&quot;;
+// requestBody must be the original raw UTF-8 body, before JSON parsing.
+const timestamp = req.headers[&quot;salute-timestamp&quot;];
+const received = req.headers[&quot;salute-signature&quot;] || &quot;&quot;;
+if (!/^\d+$/.test(timestamp || &quot;&quot;) ||
+    Math.abs(Date.now() / 1000 - Number(timestamp)) &gt; 300) {
+  throw new Error(&quot;Expired webhook&quot;);
+}
+const expected = &quot;v1=&quot; + createHmac(&quot;sha256&quot;, process.env.SALUTE_WEBHOOK_SECRET)
+  .update(`${timestamp}.${requestBody}`).digest(&quot;hex&quot;);
+const a = Buffer.from(received), b = Buffer.from(expected);
+if (a.length !== b.length || !timingSafeEqual(a, b)) {
+  throw new Error(&quot;Invalid webhook signature&quot;);
+}
+const event = JSON.parse(requestBody);
+// Atomically deduplicate event.id in your database before fulfilling.
+// Respond 2xx after durably accepting the event.</code></pre>
+      </section>
+      <section class="section" id="contracts">
+        <h2>4. Contract workflow</h2>
+        <p>
+          The main EVM factory uses reviewed OpenZeppelin clone and signature
+          primitives. The deterministic address binds immutable order terms. Any
+          executor can deploy and forward only after funding. Deployment,
+          merchant payment and reward payment succeed together or revert
+          together. There is no owner, admin, upgrade hook or payout setter in
+          the EVM contracts.
+        </p>
+        <p>
+          The factory exposes <code>predictAddress</code>,
+          <code>verifyOrder</code>, <code>settle</code>,
+          <code>collect</code> and <code>collectWithReward</code>. Reward quotes
+          bind the actual execution chain, asset, order digest, single-use
+          nonce, deadline and minimum merchant receipt. They cannot change the
+          funded deposit address or merchant.
+        </p>
+        <p>
+          Tempo has no native-payment path and checks exact TIP-20 recipient
+          balances. Solana verifies the preceding Ed25519 instruction and uses
+          immutable merchant-bound order accounts and PDAs. Classic SPL setup
+          consumes account rent. TRON uses a dedicated TVM/TIP-712 factory and
+          requires Bandwidth/Energy resources. Solana deployment authority must
+          be revoked before making an ownerless deployment claim.
+        </p>
+        <p>
+          Invoice amount is an accounting expectation, not a minimum collection
+          balance. A positive balance can be collected if it leaves a positive
+          merchant receipt after any reward. Token freezes, fee-on-transfer,
+          rebasing and incompatible token policies are not bypassed. Tests are
+          not an independent security audit.
+        </p>
+      </section>
+      <section class="section" id="recovery">
+        <h2>5. Cross-chain and wrong-asset recovery</h2>
+        <p>
+          Portable EVM recovery requires the same deterministic factory,
+          initialization bytecode, salt and receiver implementation on both
+          chains. The base EIP-712 order uses its fixed origin chain; recovery
+          rewards use the actual execution chain. EOA merchant signatures are
+          portable; foreign-chain ERC-1271 wallets are not supported.
+        </p>
+        <p>
+          Collect the actual asset with a zero-reward sponsored call, or supply
+          a merchant-signed reward quote for that chain and asset. Recovery pays
+          the same merchant on the chain where the asset arrived. It does not
+          bridge, convert tokens, return funds to a customer or recover deposits
+          from an unrelated address. Solana and TRON are separate payment rails.
+        </p>
+        <p>
+          Always show the intended network prominently. Exchange withdrawal
+          addresses cannot be assumed to be valid customer refund destinations.
+          Customer refunds need a separate verified merchant process and are not
+          implemented by collection.
+        </p>
+        <a class="button" href="/developer">Open Developer settings</a>
+      </section>
+    </main>
+    <footer>
+      <span
+        >Salute supplies infrastructure. The protocol forwards funds to the
+        signed merchant.</span
+      >
+      <div class="links">
+        <a href="/app">Create payment</a><a href="/executor">Executor</a
+        ><a href="/developer">Developer settings</a>
+      </div>
+    </footer>
+  </body>
+</html>
