@@ -49,14 +49,14 @@ export function PaymentHero() {
             <span className="hero-fee-line">
               No custody.
               <br />
-              No fees.
+              No platform cut.
               <br />
               No wallet pairing.
             </span>
           </h1>
           <div className="hero-fee-note">
-            0% Salute collection fee. Network costs and optional executor
-            rewards still apply.
+            0% Salute collection fee. Infrastructure plans, network costs and
+            optional executor rewards apply.
           </div>
           <p className="hero-description">
             <strong>Onchain payments across eight chains.</strong>
