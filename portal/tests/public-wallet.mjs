@@ -6,7 +6,9 @@ import {
   JsonRpcProvider,
   Contract,
   FetchRequest,
+  Interface,
 } from "ethers";
+import { fundingStatus } from "../lib/payment-status.ts";
 import { loadEnvironment, catalog } from "../../scripts/testnet-config.mjs";
 import {
   create,
@@ -108,21 +110,29 @@ try {
     await new Promise((r) => setTimeout(r, 1500));
   }
   assert.equal(updated.balance, "10000000");
-  const before = await token.balanceOf(merchant.address);
+  assert.equal(fundingStatus(updated.balance, order.terms.amount), "partially_paid");
+  assert.equal(await p.getCode(order.address), "0x", "funding must precede receiver deployment");
   stage = "underpayment settlement";
   const first = await act(config, updated, "settle", "", () => {}, payer.address);
   const receipt = await p.getTransactionReceipt(first);
-  assert.equal((await token.balanceOf(merchant.address, { blockTag: receipt.blockNumber })) - before, 8000000n);
+  const transfers = new Interface(["event Transfer(address indexed from,address indexed to,uint256 value)"]);
+  const merchantReceipt = (receipt) => receipt.logs.filter(l => l.address.toLowerCase() === r.token.toLowerCase()).reduce((sum, l) => {
+    try { const event = transfers.parseLog(l); return event?.args.to.toLowerCase() === merchant.address.toLowerCase() ? sum + event.args.value : sum; } catch { return sum; }
+  }, 0n);
+  assert.equal(merchantReceipt(receipt), 8000000n);
+  assert.notEqual(await p.getCode(order.address), "0x", "first settlement deploys the receiver atomically");
   stage = "overpayment";
   await act(config, order, "deposit", "500", () => {}, payer.address);
   for (let retry = 0; retry < 12; retry++) {
-    updated = await refresh(config, order);
+    updated = await refresh(config, { ...order, collected: "10000000", received: "10000000" });
     if (updated.balance === "500000000") break;
     await new Promise((r) => setTimeout(r, 1500));
   }
   assert.equal(updated.balance, "500000000");
+  assert.equal(fundingStatus(updated.balance, order.terms.amount), "overpaid");
   stage = "overpayment settlement";
-  await act(config, updated, "settle", "", () => {}, payer.address);
+  const second = await act(config, updated, "settle", "", () => {}, payer.address);
+  assert.equal(merchantReceipt(await p.getTransactionReceipt(second)), 498000000n);
   result = {
     at: new Date().toISOString(),
     chain,
@@ -135,6 +145,8 @@ try {
       "underpayment",
       "overpayment",
       "executor reward",
+      "observed funding balance changes from underpaid to overpaid",
+      "funding precedes atomic receiver deployment",
       chain === "tempo" ? "receipt confirmation with live mixed Tempo transactions" : "public testnet transaction confirmations",
     ],
     transactions,

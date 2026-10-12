@@ -41,3 +41,10 @@ test("offline balance and cached sweeps cannot masquerade as cumulative receipt 
   assert.equal(cumulativeReceived({ balance: "10", collected: "500", received: "100" }), 100n);
   assert.equal(fundingStatus(cumulativeReceived({ balance: "0", collected: "100" }), "100"), "awaiting");
 });
+
+test("indexed accounting stays authoritative while the watcher catches up with live balances", () => {
+  assert.equal(cumulativeReceived({ balance: "10", received: "0" }), 0n);
+  assert.equal(cumulativeReceived({ balance: "90", collected: "10", received: "10" }), 10n);
+  assert.equal(cumulativeReceived({ balance: "500", collected: "10", received: "100" }), 100n);
+  assert.equal(cumulativeReceived({ balance: "0", collected: "10", received: "510" }), 510n);
+});

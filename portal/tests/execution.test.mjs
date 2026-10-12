@@ -56,3 +56,17 @@ test("confirmed chain settlement survives independent indexing and RPC outages",
   assert.equal(result.current, receipt);
   assert.match(result.warning, /receipt/);
 });
+
+test("all eight networks can collect underpayments and overpayments independently of invoice status", async () => {
+  const { collectionStatus } = await import("../lib/execution.ts");
+  for (const chain of ["ethereum", "base", "arbitrum", "bnb", "tempo", "robinhood", "solana", "tron"]) {
+    const partial = { ...intent("10", chain), terms: { ...intent().terms, amount: "100" }, received: "10" };
+    assert.equal(collectionStatus(partial).status, "ready", chain);
+    assert.equal(executionPreview(partial, "executor", false).collectible, true, chain);
+    assert.equal(collectionStatus({ ...partial, balance: "500", received: "510" }).status, "ready", chain);
+    assert.equal(collectionStatus({ ...partial, balance: "1" }).status, "sponsor", chain);
+    assert.equal(executionPreview({ ...partial, balance: "1" }, "executor", true).collectible, true, chain);
+    assert.equal(collectionStatus({ ...partial, balance: "0", settled: true }).status, "collected", chain);
+    assert.equal(collectionStatus({ ...partial, balance: "0", settled: true, receipts: [{ kind: "settle", status: "pending" }] }).status, "pending", chain);
+  }
+});
