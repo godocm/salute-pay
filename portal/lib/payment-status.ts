@@ -17,6 +17,22 @@ export function cumulativeReceived(i: {
   return BigInt(i.received ?? i.balance);
 }
 
+// A balance is current funding evidence, while invoice history comes from receipts.
+// Never add a browser's cached sweep estimate to either figure.
+export function fundingView(i: { balance: string; received?: string }, expected: string) {
+  const live = BigInt(i.balance),
+    recorded = i.received === undefined ? null : BigInt(i.received),
+    fromBalance = recorded === null || live > recorded,
+    progress = fundingProgress(fromBalance ? live : recorded, expected);
+  return {
+    ...progress,
+    fromBalance,
+    label: fromBalance
+      ? { awaiting: "No balance", partially_paid: "Underpaid balance", paid: "Fully funded balance", overpaid: "Overpaid balance" }[progress.status]
+      : fundingLabels[progress.status],
+  };
+}
+
 // Use gross, cumulative invoice-asset receipts, not the remaining vault balance.
 export function fundingStatus(
   received: string | bigint,

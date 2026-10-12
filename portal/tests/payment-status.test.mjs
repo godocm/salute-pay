@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { fundingStatus, fundingProgress, cumulativeReceived } from "../lib/payment-status.ts";
+import { fundingStatus, fundingProgress, cumulativeReceived, fundingView } from "../lib/payment-status.ts";
 import { planAllowsNetwork } from "../lib/plans.ts";
 
 test("invoice funding distinguishes partial, exact, excess and cumulative late deposits", () => {
@@ -47,4 +47,23 @@ test("indexed accounting stays authoritative while the watcher catches up with l
   assert.equal(cumulativeReceived({ balance: "90", collected: "10", received: "10" }), 10n);
   assert.equal(cumulativeReceived({ balance: "500", collected: "10", received: "100" }), 100n);
   assert.equal(cumulativeReceived({ balance: "0", collected: "10", received: "510" }), 510n);
+});
+
+test("live balance funding is labelled separately while receipt indexing catches up", async () => {
+  const { fundingView } = await import("../lib/payment-status.ts");
+  assert.equal(fundingView({ balance: "10", received: "0" }, "100").label, "Underpaid balance");
+  assert.equal(fundingView({ balance: "100", received: "0" }, "100").status, "paid");
+  assert.equal(fundingView({ balance: "500", received: "10" }, "100").label, "Overpaid balance");
+  assert.equal(fundingView({ balance: "0", received: "510" }, "100").label, "Overpaid");
+  assert.equal(fundingView({ balance: "0" }, "100").label, "No balance");
+});
+
+test("queue labels distinguish live balances from indexed invoice completion", () => {
+  const live = fundingView({ balance: "100", received: "0" }, "100");
+  assert.equal(live.label, "Fully funded balance");
+  assert.equal(live.fromBalance, true);
+  const indexed = fundingView({ balance: "0", received: "100" }, "100");
+  assert.equal(indexed.label, "Fully paid");
+  assert.equal(indexed.fromBalance, false);
+  assert.equal(fundingView({ balance: "0" }, "100").label, "No balance");
 });

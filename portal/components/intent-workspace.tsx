@@ -1,7 +1,7 @@
 "use client";
 import { planAllowsNetwork, planNetworkMessage } from "../lib/plans";
 import { executionPreview, afterConfirmation, collectionStatus } from "../lib/execution";
-import { cumulativeReceived, fundingProgress, fundingLabels } from "../lib/payment-status";
+import { cumulativeReceived, fundingProgress, fundingView } from "../lib/payment-status";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
@@ -758,8 +758,8 @@ export default function Workspace({
                       </div>
                       {mode === "executor" ? (
                         <div className="queue-statuses">
-                          <span className={`status ${fundingProgress(cumulativeReceived(o), o.terms.amount).status}`}>
-                            {fundingLabels[fundingProgress(cumulativeReceived(o), o.terms.amount).status]}
+                          <span className={`status ${fundingView(o, o.terms.amount).status}`}>
+                            {fundingView(o, o.terms.amount).label}
                           </span>
                           <small className={`execution-state ${collectionStatus(o).status}`}>{collectionStatus(o).label}</small>
                         </div>
@@ -975,7 +975,7 @@ export default function Workspace({
               <div>
                 <span className="eyebrow">SIGNED PAYMENT · {names[i.network.chain]}</span>
                 <div className="detail-statuses">
-                  <span className={`status ${fundingProgress(cumulativeReceived(i), i.terms.amount).status}`}>{fundingLabels[fundingProgress(cumulativeReceived(i), i.terms.amount).status]}</span>
+                  <span className={`status ${fundingView(i, i.terms.amount).status}`}>{fundingView(i, i.terms.amount).label}</span>
                   <span className={`status ${collectionStatus(i).status}`}>{collectionStatus(i).label}</span>
                 </div>
                 <h2>{i.reference}</h2>
@@ -1038,6 +1038,7 @@ export default function Workspace({
               </div>
             </div>
             <p className="field-note">
+              {fundingView(i, i.terms.amount).fromBalance && "Funding status reflects the live balance; cumulative receipt history is unavailable or still updating. "}
               Underpayments and overpayments are collectable. Invoice completion
               is based on cumulative confirmed receipts; a previous sweep does
               not prevent later deposits. Offline orders show current balance
