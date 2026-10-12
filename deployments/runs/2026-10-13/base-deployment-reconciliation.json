@@ -1,0 +1,10 @@
+{
+  "at": "2026-10-12T21:34:05.793Z",
+  "chain": "base",
+  "status": "passed",
+  "hash": "0x5950c94975fc91cc37ac9309fc1bd9ed01292da85264c88f0175b9b4c2fda41a",
+  "blockNumber": 48036041,
+  "receiver": "0x27cAC3227174fb142DdA66F2f7Db65774519df39",
+  "codeBytes": 237,
+  "check": "confirmed first collection deployed receiver; block-specific read reconciles stale latest RPC response"
+}

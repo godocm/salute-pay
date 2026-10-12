@@ -1,0 +1,19 @@
+{
+  "at": "2026-10-12T21:34:54.132Z",
+  "chain": "ethereum",
+  "status": "passed",
+  "orderAddress": "0x38fA982236826A5474796Dc4127fA7B4c93e93b5",
+  "transactions": [
+    {
+      "kind": "settle",
+      "hash": "0xada3b4c8f697f2491e52670569b2053bc4825447801247f0b9d4373706e899a6",
+      "status": "confirmed",
+      "chain": "ethereum",
+      "at": "2026-10-12T21:35:49.273Z"
+    }
+  ],
+  "checks": [
+    "confirmed merchant payout 498000000",
+    "settle confirmed"
+  ]
+}

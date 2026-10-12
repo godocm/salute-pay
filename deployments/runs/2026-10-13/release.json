@@ -1,0 +1,20 @@
+{
+  "at": "2026-10-12T21:42:29.950Z",
+  "project": "salutepay",
+  "deploymentId": "dpl_BSZRWbXBGPEiSK9iCvD5XwjfgDUE",
+  "productionUrl": "https://salutepay.vercel.app",
+  "executorUrl": "https://salutepay.vercel.app/executor",
+  "deploymentUrl": "https://salutepay-5oex2v7nt-godos-projects-3daa2ea8.vercel.app",
+  "readyState": "READY",
+  "checks": [
+    "Node 24 Next.js production build",
+    "TypeScript validation",
+    "11 UI/accounting/execution/TLS tests",
+    "isolated PostgreSQL integration",
+    "isolated EVM wallet-client flow",
+    "seven public testnet wallet-client flows; BNB skipped by user",
+    "real Base under/overpayment updates verified in desktop/mobile browser",
+    "deployed executor page and API health checks",
+    "all eight configured testnets ready in deployed browser UI"
+  ]
+}

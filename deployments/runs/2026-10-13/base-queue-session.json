@@ -1,0 +1,44 @@
+{
+  "at": "2026-10-12T21:30:32.068Z",
+  "chain": "base",
+  "status": "passed",
+  "orderAddress": "0x27cAC3227174fb142DdA66F2f7Db65774519df39",
+  "transactions": [
+    {
+      "kind": "deposit",
+      "hash": "0xbd61a8fe04fe367c53fbd90de8f99582e56ca1a2355bc7018f0bfade2e578708",
+      "status": "confirmed",
+      "chain": "base",
+      "at": "2026-10-12T21:31:00.669Z"
+    },
+    {
+      "kind": "settle",
+      "hash": "0x02a8f2370cb6712deab11fb9dd35ca28792118d6c44797dc98c3368207f4e97d",
+      "status": "confirmed",
+      "chain": "base",
+      "at": "2026-10-12T21:32:30.708Z"
+    },
+    {
+      "kind": "deposit",
+      "hash": "0x598291bf049fc70e0f788c64a1aa36201f67b19b1a23fab7ae6e4a83bee53d8c",
+      "status": "confirmed",
+      "chain": "base",
+      "at": "2026-10-12T21:33:37.064Z"
+    },
+    {
+      "kind": "settle",
+      "hash": "0x5850892048ad3848753bebff1a52a265848945b551126a90ce79a18e30463d83",
+      "status": "confirmed",
+      "chain": "base",
+      "at": "2026-10-12T21:34:57.675Z"
+    }
+  ],
+  "checks": [
+    "deposit confirmed",
+    "confirmed merchant payout 8000000",
+    "settle confirmed",
+    "deposit confirmed",
+    "confirmed merchant payout 498000000",
+    "settle confirmed"
+  ]
+}

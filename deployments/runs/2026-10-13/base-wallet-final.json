@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-12T21:26:09.500Z",
+  "chain": "base",
+  "status": "failed",
+  "reason": "first settlement deploys the receiver atomically",
+  "stage": "underpayment settlement",
+  "transactions": [
+    "0x613736a5fad023b7c747d5c895cb5bdac7dba03047fd2e631ce5e0e3ba14059e",
+    "0x1f95896786d3a678d35f61baf5a8a83c225c08a7712d59cd91e6ae1deab74911",
+    "0x5950c94975fc91cc37ac9309fc1bd9ed01292da85264c88f0175b9b4c2fda41a"
+  ]
+}

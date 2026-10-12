@@ -1,0 +1,162 @@
+{
+  "at": "2026-10-12T21:29:57.581Z",
+  "chain": "solana",
+  "chainId": "devnet",
+  "program": "4soYk2h6YM9mAn3WWTCLgvzEGA5V1jWacupCASzY14zS",
+  "token": "HYYqqGLv2DjmpeHtMBeV8psRVBwwPvjjAW6XjTRwagKp",
+  "status": "passed",
+  "checks": [
+    "Wallet Standard / Ed25519 signing",
+    "native prefunding and atomic registration/collection",
+    "SOL underpayment, overpayment and per-sweep reward",
+    "tiny late SOL deposit with reward waiver",
+    "term and network-domain tampering rejected",
+    "public SPL mint button call",
+    "SPL address setup",
+    "10 underpayment -> 8 merchant + 2 reward",
+    "500 overpayment -> 498 merchant + 2 reward",
+    "late sponsored SPL collection",
+    "zero reward -> one payout transfer",
+    "wrong SPL mint -> immutable merchant with no executor reward"
+  ],
+  "transactions": [
+    {
+      "kind": "fund separate test roles",
+      "hash": "4wWzYTt85VhoDMCwvQroJTsc8rdU4AKk2MvMfEftxHMnw4efie9qHtr9fiXXWYPEzg1YxU1dWnZ4zez79hceVGZW",
+      "feeLamports": 5000,
+      "computeUnits": 450
+    },
+    {
+      "kind": "deposit",
+      "hash": "62HeYo1poafDD9xdQi4wpHPNBFKKfKe6SYEhWf4bC63LnyFf948xEnhBvDvfuDpxz1JnbjLBcJcVHJ8v8nttxy8c",
+      "feeLamports": 5000,
+      "computeUnits": 150
+    },
+    {
+      "kind": "settle",
+      "hash": "3kcP2tHuFbkNagoPvxWdgyvCmebxeioq86Y2VD8fzUSr89JxEnXcy13y9UU3y1Y4pxie5bFsNZ66PozkagdZxMq7",
+      "feeLamports": 10000,
+      "computeUnits": 64137
+    },
+    {
+      "kind": "deposit",
+      "hash": "2kkRXTBCcoJXopNs7Xbo9yTiKj6vZSYKuAhm5AZ2iSTD7sJsFidXd4bCygjc5UniAs2r3aa6jFDRDvQcpSX7VDvW",
+      "feeLamports": 5000,
+      "computeUnits": 150
+    },
+    {
+      "kind": "settle",
+      "hash": "4NFu8xr6GVAvBPCce1owDcmfya4LkeD2rzEZevXrfBB2j8LXfY7LHcjr5prSbNHT5XLPeQYs7JWhqssV3a4j7ehK",
+      "feeLamports": 5000,
+      "computeUnits": 10541
+    },
+    {
+      "kind": "deposit",
+      "hash": "41Lx8Q7CvZeEUcDtuMbwEEjBpYtUjEtKSGZ9P3dhc8Bt4bZ1UEbVSu6JKpAnW9mjX491Yh5MJPwRMaWEFAB6uWzS",
+      "feeLamports": 5000,
+      "computeUnits": 150
+    },
+    {
+      "kind": "settle",
+      "hash": "5w4nmXpYLyyKEJeHKbFUYDR84JxHKXLAYfXZY8oEYDy2f2RP9WKvh6hV4qBu2krL1ZZ2Ssz6znCT8roBHvT6TZRy",
+      "feeLamports": 5000,
+      "computeUnits": 8695
+    },
+    {
+      "kind": "native sponsored setup",
+      "hash": "2YVKLrAZ7vmG5a2U3aKgGTzjQqaidy8PJcxiBCD6jsf2SAk6raoSFFb5KMZB5mRKV9ZEZ6kuug2MjJnYhpJ55yyz",
+      "feeLamports": 10000,
+      "computeUnits": 54887
+    },
+    {
+      "kind": "deposit",
+      "hash": "2dHKUmoEK2AGd7sRn9QAfxjVermrmDeTCnGzSkcFJ7eV6cenimpJtN8GJydjVcnMicKDjecX9Mnedyy5HLtvx3Q5",
+      "feeLamports": 5000,
+      "computeUnits": 150
+    },
+    {
+      "kind": "settle",
+      "hash": "5UWNrjBn6i7RrwVkKBgjGiDxffxCNCMzcea8M61WbQwgZsVJrddSrHiRc9EmBa7QCPmKssSvX8kraC62kpw6MPLk",
+      "feeLamports": 5000,
+      "computeUnits": 8705
+    },
+    {
+      "kind": "permissionless SPL faucet",
+      "hash": "58xZojcSQ5HBG9Yu4SyveVBXTTwoD9Jd7ha49XCi9JkJkZE1UHjexWW5jGSMiyJkDhkkwUDckTRiHmTA3EWr5wLL",
+      "feeLamports": 5000,
+      "computeUnits": 24241
+    },
+    {
+      "kind": "SPL payment-address setup",
+      "hash": "4thMVYYNdUxrgPTWCS5iV2bF1ndNtnym4jg1UYhPUhdbqTh1DZ2DCqstFwzbwFcyZQfam3jQ3g6fYNSBJYJw6pno",
+      "feeLamports": 10000,
+      "computeUnits": 76314
+    },
+    {
+      "kind": "deposit",
+      "hash": "5WWpd8dhFyWRxRN7BzY7XNnMqM3dCNpPSwJpVKcpG51fcmHJtuHWzGsVR4AATFtzcdge9BKvLVmP18Lj85vCK9kJ",
+      "feeLamports": 5000,
+      "computeUnits": 105
+    },
+    {
+      "kind": "settle",
+      "hash": "5d4FMPzfYrSdzEmixA8q6doSnNtjQCKi7MA6WWB9UfafHBLCnT3ASikyAPn2UZ8zWF3uyA5Au8EemcdGmcBHWjjS",
+      "feeLamports": 5000,
+      "computeUnits": 45362
+    },
+    {
+      "kind": "deposit",
+      "hash": "tYinz5p2Hv6UDBuxm3DtZnF3fUojSgvnHY4VNdLTdkyikW6PDZ3JLUxA1irNDL8d8XHyc7FBmeQUtj8r5j4e5SG",
+      "feeLamports": 5000,
+      "computeUnits": 105
+    },
+    {
+      "kind": "settle",
+      "hash": "5Rf3fWidxQM9SvsNzTaTPcWJMNTiRi6oTCxWsbdp1b3ffiHCX37FTAt9usFMzTP5eChwAPeLjKd48c1m54EUNgat",
+      "feeLamports": 5000,
+      "computeUnits": 27202
+    },
+    {
+      "kind": "deposit",
+      "hash": "3xGmBrP9GeQqUQq5usCXYapsporD95vGS8nUMtAzmWwwiHzAYqzzUmt4TFZxDtFUubxr6bnBRynZAeR69vXiFKDB",
+      "feeLamports": 5000,
+      "computeUnits": 105
+    },
+    {
+      "kind": "settle",
+      "hash": "3X4aB4XJ57JycE5aNxhHfhy4FRJCvuUKWMM1X6eYD5JG95zr2GmBjCX3AL4GQfhzLFtezAz2KE4L7KjhBNU8uRJU",
+      "feeLamports": 5000,
+      "computeUnits": 19189
+    },
+    {
+      "kind": "zero-reward SPL setup",
+      "hash": "3PJN9YdirEQgcSpWMSSB2Kaf76kEdGr93Ganvz4tsZnu8zUM677dBrDGCizjfPpGsnteqekKhuBdmSXT2FfgAU8E",
+      "feeLamports": 10000,
+      "computeUnits": 79220
+    },
+    {
+      "kind": "deposit",
+      "hash": "4pj6BLHPAGncWk3viqFKLjPjq2mvuGgE6YU8aKg2XzjroET1xMJrD31FFJt6MHKdc7CNbA4pffHhxxLaDzfY1aLh",
+      "feeLamports": 5000,
+      "computeUnits": 105
+    },
+    {
+      "kind": "settle",
+      "hash": "3GxoRoNytkKG1P3CrqCrzoqtwDJym8VkKT3gxCrX2V74aLLsNbnq5B4rTv8hHYpoa9vDBoyywz4EYSSieYcFSw7j",
+      "feeLamports": 5000,
+      "computeUnits": 19187
+    },
+    {
+      "kind": "wrong-mint deposit",
+      "hash": "2V9LaiDRTr3wJ61FQcFEiz5grUgwnkaBRY116U68RUo5db6NnyEHbw2BSrVuzL6bkbALhBRTPeXwYKB3NroJeZ1s",
+      "feeLamports": 5000,
+      "computeUnits": 120
+    },
+    {
+      "kind": "wrong-mint recovery",
+      "hash": "3Pd7WvSwzuvQGwndZeXvASqSfVmbhVugaVVDZHAMKRHkqzGXpKHVGuBfAKkBZyrxYFcyrtXzABTLnBxHuGpi8FQL",
+      "feeLamports": 5000,
+      "computeUnits": 13226
+    }
+  ]
+}

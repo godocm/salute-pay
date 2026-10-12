@@ -1590,7 +1590,10 @@ async function waitSolanaReceipt(
 ) {
   const deadline = Date.now() + 120000;
   while (Date.now() < deadline) {
-    const statuses = await c.getSignatureStatuses([signature]),
+    // Confirmed signatures can leave a node's recent cache while polling.
+    const statuses = await c.getSignatureStatuses([signature], {
+      searchTransactionHistory: true,
+    }),
       status = statuses.value[0];
     if (
       status?.confirmationStatus === "confirmed" ||

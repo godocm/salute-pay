@@ -1,0 +1,509 @@
+{
+  "at": "2026-10-12T21:37:15.157Z",
+  "dateDubai": "2026-10-13",
+  "scope": "Valueless public testnet assets only. Tests use the app wallet client with environment-funded fixtures; browser QA verifies live balance/status rendering, not an external wallet approval.",
+  "passedNetworks": 7,
+  "skippedNetworks": 1,
+  "recordedSuccessfulTransactions": 54,
+  "uiChecks": [
+    "All eight activated testnets render",
+    "Real Base underpayment appears automatically with execution readiness",
+    "Real Base overpayment updates the queue and open intent automatically",
+    "Available balance clears after confirmed settlement",
+    "Search feedback",
+    "Desktop and mobile alignment without horizontal overflow"
+  ],
+  "networks": [
+    {
+      "chain": "ethereum",
+      "status": "passed",
+      "chainId": "11155111",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "scope": "App wallet-client signing, deposit and settlement using environment-backed testnet transactions",
+      "reports": [
+        "ethereum-wallet-recheck.json",
+        "ethereum-reconciliation.json"
+      ],
+      "checks": [
+        "same app wallet connector/client paths",
+        "merchant EIP-712 signing",
+        "separate checkout-link verification",
+        "public merchant mint button call",
+        "underpayment",
+        "overpayment",
+        "executor reward",
+        "public testnet transaction confirmations",
+        "Previously timed-out deposit reconciled and remaining balance collected without another deposit"
+      ],
+      "transactions": [
+        {
+          "hash": "0x7ed5f9bff323205fc7b67e4c87396e2d313d3ab43acf77796e9004a858a9ea00",
+          "explorerUrl": "https://sepolia.etherscan.io/tx/0x7ed5f9bff323205fc7b67e4c87396e2d313d3ab43acf77796e9004a858a9ea00"
+        },
+        {
+          "hash": "0xa150c189eda9b787351eb401166a07bd098ad3043d572d3c646769ab4ae5a80f",
+          "explorerUrl": "https://sepolia.etherscan.io/tx/0xa150c189eda9b787351eb401166a07bd098ad3043d572d3c646769ab4ae5a80f"
+        },
+        {
+          "hash": "0x51b8ae018e555e11afa6b0a8fb72e6da0b322d39534713bb9b1bcfde910ea6c5",
+          "explorerUrl": "https://sepolia.etherscan.io/tx/0x51b8ae018e555e11afa6b0a8fb72e6da0b322d39534713bb9b1bcfde910ea6c5"
+        },
+        {
+          "hash": "0xd23fa10597f55803dd7e0d7804741ef29378dcdd94f7e2ee8f5d1c85dcacda5b",
+          "explorerUrl": "https://sepolia.etherscan.io/tx/0xd23fa10597f55803dd7e0d7804741ef29378dcdd94f7e2ee8f5d1c85dcacda5b"
+        },
+        {
+          "hash": "0x1b908c6b467e0f6f759eb1a28aa3f859de1c3d5c78407905f4698fcd240662e7",
+          "explorerUrl": "https://sepolia.etherscan.io/tx/0x1b908c6b467e0f6f759eb1a28aa3f859de1c3d5c78407905f4698fcd240662e7"
+        },
+        {
+          "kind": "settle",
+          "hash": "0xada3b4c8f697f2491e52670569b2053bc4825447801247f0b9d4373706e899a6",
+          "status": "confirmed",
+          "chain": "ethereum",
+          "at": "2026-10-12T21:35:49.273Z",
+          "explorerUrl": "https://sepolia.etherscan.io/tx/0xada3b4c8f697f2491e52670569b2053bc4825447801247f0b9d4373706e899a6"
+        }
+      ]
+    },
+    {
+      "chain": "arbitrum",
+      "status": "passed",
+      "chainId": "421614",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "scope": "App wallet-client signing, deposit and settlement using environment-backed testnet transactions",
+      "reports": [
+        "arbitrum-wallet.json"
+      ],
+      "checks": [
+        "same app wallet connector/client paths",
+        "merchant EIP-712 signing",
+        "separate checkout-link verification",
+        "public merchant mint button call",
+        "underpayment",
+        "overpayment",
+        "executor reward",
+        "public testnet transaction confirmations"
+      ],
+      "transactions": [
+        {
+          "hash": "0x9f333f5d41f4d6bd513227784332ca7920d5f48febef1441173c2d03c687507b",
+          "explorerUrl": "https://sepolia.arbiscan.io/tx/0x9f333f5d41f4d6bd513227784332ca7920d5f48febef1441173c2d03c687507b"
+        },
+        {
+          "hash": "0x704caa0ecd3e7b002f3b988710b70eb066f53931c2bca5a4f1f36a3612783859",
+          "explorerUrl": "https://sepolia.arbiscan.io/tx/0x704caa0ecd3e7b002f3b988710b70eb066f53931c2bca5a4f1f36a3612783859"
+        },
+        {
+          "hash": "0x0fa364ab9c20b751cbd7c03cd096a8695d610d66c06b82b62912c1fcbac42abd",
+          "explorerUrl": "https://sepolia.arbiscan.io/tx/0x0fa364ab9c20b751cbd7c03cd096a8695d610d66c06b82b62912c1fcbac42abd"
+        },
+        {
+          "hash": "0x4a5cb7a1866827a1e59db0837d97ff41fd977b212fc3f6e342d70f0c395dc57f",
+          "explorerUrl": "https://sepolia.arbiscan.io/tx/0x4a5cb7a1866827a1e59db0837d97ff41fd977b212fc3f6e342d70f0c395dc57f"
+        },
+        {
+          "hash": "0x957e4f986f27dab09deb1e47beca0294e34c1b3337e0a62a65a50c8369c21c4d",
+          "explorerUrl": "https://sepolia.arbiscan.io/tx/0x957e4f986f27dab09deb1e47beca0294e34c1b3337e0a62a65a50c8369c21c4d"
+        }
+      ]
+    },
+    {
+      "chain": "tempo",
+      "status": "passed",
+      "chainId": "42431",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "scope": "App wallet-client signing, deposit and settlement using environment-backed testnet transactions",
+      "reports": [
+        "tempo-wallet.json"
+      ],
+      "checks": [
+        "same app wallet connector/client paths",
+        "merchant EIP-712 signing",
+        "separate checkout-link verification",
+        "public merchant mint button call",
+        "underpayment",
+        "overpayment",
+        "executor reward",
+        "receipt confirmation with live mixed Tempo transactions"
+      ],
+      "transactions": [
+        {
+          "hash": "0xff69aa135b5d40f924aa0c8a5e64f3b536f5e80487f433debff01176668009a5",
+          "explorerUrl": "https://explore.testnet.tempo.xyz/tx/0xff69aa135b5d40f924aa0c8a5e64f3b536f5e80487f433debff01176668009a5"
+        },
+        {
+          "hash": "0x1212039597246ce0db7eeb0cd7691d49be8ca6829cc3d69979da49d0a95e39e3",
+          "explorerUrl": "https://explore.testnet.tempo.xyz/tx/0x1212039597246ce0db7eeb0cd7691d49be8ca6829cc3d69979da49d0a95e39e3"
+        },
+        {
+          "hash": "0xb3c1e29ed814758ef5283d72dad8c5b82b72aebc99f3d2c842c95d8750b01da0",
+          "explorerUrl": "https://explore.testnet.tempo.xyz/tx/0xb3c1e29ed814758ef5283d72dad8c5b82b72aebc99f3d2c842c95d8750b01da0"
+        },
+        {
+          "hash": "0xabca96516780274aede5db461a8096edbc7048dd31cd1cfdfd527f5b2e30252a",
+          "explorerUrl": "https://explore.testnet.tempo.xyz/tx/0xabca96516780274aede5db461a8096edbc7048dd31cd1cfdfd527f5b2e30252a"
+        },
+        {
+          "hash": "0xa9cf1b26f88928d5883125a3f0182c5cf20faeb96a2db6e3908b9882d91b58bb",
+          "explorerUrl": "https://explore.testnet.tempo.xyz/tx/0xa9cf1b26f88928d5883125a3f0182c5cf20faeb96a2db6e3908b9882d91b58bb"
+        }
+      ]
+    },
+    {
+      "chain": "robinhood",
+      "status": "passed",
+      "chainId": "46630",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "scope": "App wallet-client signing, deposit and settlement using environment-backed testnet transactions",
+      "reports": [
+        "robinhood-wallet.json"
+      ],
+      "checks": [
+        "same app wallet connector/client paths",
+        "merchant EIP-712 signing",
+        "separate checkout-link verification",
+        "public merchant mint button call",
+        "underpayment",
+        "overpayment",
+        "executor reward",
+        "public testnet transaction confirmations"
+      ],
+      "transactions": [
+        {
+          "hash": "0x5c793df2f9e6e3e409745ed4acb34ec13793c5a52876da00c566c1be223a1852",
+          "explorerUrl": "https://explorer.testnet.chain.robinhood.com/tx/0x5c793df2f9e6e3e409745ed4acb34ec13793c5a52876da00c566c1be223a1852"
+        },
+        {
+          "hash": "0x32496ced07b6dfb499e6f708c4a3c2ebb3f3bbc062cb8a8a11884693ff5b21f8",
+          "explorerUrl": "https://explorer.testnet.chain.robinhood.com/tx/0x32496ced07b6dfb499e6f708c4a3c2ebb3f3bbc062cb8a8a11884693ff5b21f8"
+        },
+        {
+          "hash": "0x2a28140c57207d06b04f6f0c0c55c44288f7d492360016f508c90e2571aeebb9",
+          "explorerUrl": "https://explorer.testnet.chain.robinhood.com/tx/0x2a28140c57207d06b04f6f0c0c55c44288f7d492360016f508c90e2571aeebb9"
+        },
+        {
+          "hash": "0x002556055318bd9e2cb5a776cb442b12033d960d59773fae094983c65d954007",
+          "explorerUrl": "https://explorer.testnet.chain.robinhood.com/tx/0x002556055318bd9e2cb5a776cb442b12033d960d59773fae094983c65d954007"
+        },
+        {
+          "hash": "0xc24c2df2f4d75f375d70a9535d0366cfe6f45a5f2432ac3726ad269ed73e8c28",
+          "explorerUrl": "https://explorer.testnet.chain.robinhood.com/tx/0xc24c2df2f4d75f375d70a9535d0366cfe6f45a5f2432ac3726ad269ed73e8c28"
+        }
+      ]
+    },
+    {
+      "chain": "base",
+      "status": "passed",
+      "chainId": "84532",
+      "deployment": "0xEcdf8B90e83b4069444eEF009055E3174654CAb3",
+      "scope": "Signing, atomic deployment and payout reconciled from confirmed initial receipt; subsequent under/over sweeps and automatic frontend updates verified",
+      "reports": [
+        "base-deployment-reconciliation.json",
+        "base-queue-session.json"
+      ],
+      "checks": [
+        "confirmed first collection deployed receiver; block-specific read reconciles stale latest RPC response",
+        "deposit confirmed",
+        "confirmed merchant payout 8000000",
+        "settle confirmed",
+        "deposit confirmed",
+        "confirmed merchant payout 498000000",
+        "settle confirmed"
+      ],
+      "transactions": [
+        {
+          "hash": "0x5950c94975fc91cc37ac9309fc1bd9ed01292da85264c88f0175b9b4c2fda41a",
+          "explorerUrl": "https://sepolia.basescan.org/tx/0x5950c94975fc91cc37ac9309fc1bd9ed01292da85264c88f0175b9b4c2fda41a"
+        },
+        {
+          "kind": "deposit",
+          "hash": "0xbd61a8fe04fe367c53fbd90de8f99582e56ca1a2355bc7018f0bfade2e578708",
+          "status": "confirmed",
+          "chain": "base",
+          "at": "2026-10-12T21:31:00.669Z",
+          "explorerUrl": "https://sepolia.basescan.org/tx/0xbd61a8fe04fe367c53fbd90de8f99582e56ca1a2355bc7018f0bfade2e578708"
+        },
+        {
+          "kind": "settle",
+          "hash": "0x02a8f2370cb6712deab11fb9dd35ca28792118d6c44797dc98c3368207f4e97d",
+          "status": "confirmed",
+          "chain": "base",
+          "at": "2026-10-12T21:32:30.708Z",
+          "explorerUrl": "https://sepolia.basescan.org/tx/0x02a8f2370cb6712deab11fb9dd35ca28792118d6c44797dc98c3368207f4e97d"
+        },
+        {
+          "kind": "deposit",
+          "hash": "0x598291bf049fc70e0f788c64a1aa36201f67b19b1a23fab7ae6e4a83bee53d8c",
+          "status": "confirmed",
+          "chain": "base",
+          "at": "2026-10-12T21:33:37.064Z",
+          "explorerUrl": "https://sepolia.basescan.org/tx/0x598291bf049fc70e0f788c64a1aa36201f67b19b1a23fab7ae6e4a83bee53d8c"
+        },
+        {
+          "kind": "settle",
+          "hash": "0x5850892048ad3848753bebff1a52a265848945b551126a90ce79a18e30463d83",
+          "status": "confirmed",
+          "chain": "base",
+          "at": "2026-10-12T21:34:57.675Z",
+          "explorerUrl": "https://sepolia.basescan.org/tx/0x5850892048ad3848753bebff1a52a265848945b551126a90ce79a18e30463d83"
+        }
+      ]
+    },
+    {
+      "chain": "solana",
+      "status": "passed",
+      "chainId": "devnet",
+      "deployment": "4soYk2h6YM9mAn3WWTCLgvzEGA5V1jWacupCASzY14zS",
+      "scope": "App wallet-client signing, deposit and settlement using environment-backed testnet transactions",
+      "reports": [
+        "solana-wallet-recheck.json"
+      ],
+      "checks": [
+        "Wallet Standard / Ed25519 signing",
+        "native prefunding and atomic registration/collection",
+        "SOL underpayment, overpayment and per-sweep reward",
+        "tiny late SOL deposit with reward waiver",
+        "term and network-domain tampering rejected",
+        "public SPL mint button call",
+        "SPL address setup",
+        "10 underpayment -> 8 merchant + 2 reward",
+        "500 overpayment -> 498 merchant + 2 reward",
+        "late sponsored SPL collection",
+        "zero reward -> one payout transfer",
+        "wrong SPL mint -> immutable merchant with no executor reward"
+      ],
+      "transactions": [
+        {
+          "kind": "fund separate test roles",
+          "hash": "4wWzYTt85VhoDMCwvQroJTsc8rdU4AKk2MvMfEftxHMnw4efie9qHtr9fiXXWYPEzg1YxU1dWnZ4zez79hceVGZW",
+          "feeLamports": 5000,
+          "computeUnits": 450,
+          "explorerUrl": "https://explorer.solana.com/tx/4wWzYTt85VhoDMCwvQroJTsc8rdU4AKk2MvMfEftxHMnw4efie9qHtr9fiXXWYPEzg1YxU1dWnZ4zez79hceVGZW?cluster=devnet"
+        },
+        {
+          "kind": "deposit",
+          "hash": "62HeYo1poafDD9xdQi4wpHPNBFKKfKe6SYEhWf4bC63LnyFf948xEnhBvDvfuDpxz1JnbjLBcJcVHJ8v8nttxy8c",
+          "feeLamports": 5000,
+          "computeUnits": 150,
+          "explorerUrl": "https://explorer.solana.com/tx/62HeYo1poafDD9xdQi4wpHPNBFKKfKe6SYEhWf4bC63LnyFf948xEnhBvDvfuDpxz1JnbjLBcJcVHJ8v8nttxy8c?cluster=devnet"
+        },
+        {
+          "kind": "settle",
+          "hash": "3kcP2tHuFbkNagoPvxWdgyvCmebxeioq86Y2VD8fzUSr89JxEnXcy13y9UU3y1Y4pxie5bFsNZ66PozkagdZxMq7",
+          "feeLamports": 10000,
+          "computeUnits": 64137,
+          "explorerUrl": "https://explorer.solana.com/tx/3kcP2tHuFbkNagoPvxWdgyvCmebxeioq86Y2VD8fzUSr89JxEnXcy13y9UU3y1Y4pxie5bFsNZ66PozkagdZxMq7?cluster=devnet"
+        },
+        {
+          "kind": "deposit",
+          "hash": "2kkRXTBCcoJXopNs7Xbo9yTiKj6vZSYKuAhm5AZ2iSTD7sJsFidXd4bCygjc5UniAs2r3aa6jFDRDvQcpSX7VDvW",
+          "feeLamports": 5000,
+          "computeUnits": 150,
+          "explorerUrl": "https://explorer.solana.com/tx/2kkRXTBCcoJXopNs7Xbo9yTiKj6vZSYKuAhm5AZ2iSTD7sJsFidXd4bCygjc5UniAs2r3aa6jFDRDvQcpSX7VDvW?cluster=devnet"
+        },
+        {
+          "kind": "settle",
+          "hash": "4NFu8xr6GVAvBPCce1owDcmfya4LkeD2rzEZevXrfBB2j8LXfY7LHcjr5prSbNHT5XLPeQYs7JWhqssV3a4j7ehK",
+          "feeLamports": 5000,
+          "computeUnits": 10541,
+          "explorerUrl": "https://explorer.solana.com/tx/4NFu8xr6GVAvBPCce1owDcmfya4LkeD2rzEZevXrfBB2j8LXfY7LHcjr5prSbNHT5XLPeQYs7JWhqssV3a4j7ehK?cluster=devnet"
+        },
+        {
+          "kind": "deposit",
+          "hash": "41Lx8Q7CvZeEUcDtuMbwEEjBpYtUjEtKSGZ9P3dhc8Bt4bZ1UEbVSu6JKpAnW9mjX491Yh5MJPwRMaWEFAB6uWzS",
+          "feeLamports": 5000,
+          "computeUnits": 150,
+          "explorerUrl": "https://explorer.solana.com/tx/41Lx8Q7CvZeEUcDtuMbwEEjBpYtUjEtKSGZ9P3dhc8Bt4bZ1UEbVSu6JKpAnW9mjX491Yh5MJPwRMaWEFAB6uWzS?cluster=devnet"
+        },
+        {
+          "kind": "settle",
+          "hash": "5w4nmXpYLyyKEJeHKbFUYDR84JxHKXLAYfXZY8oEYDy2f2RP9WKvh6hV4qBu2krL1ZZ2Ssz6znCT8roBHvT6TZRy",
+          "feeLamports": 5000,
+          "computeUnits": 8695,
+          "explorerUrl": "https://explorer.solana.com/tx/5w4nmXpYLyyKEJeHKbFUYDR84JxHKXLAYfXZY8oEYDy2f2RP9WKvh6hV4qBu2krL1ZZ2Ssz6znCT8roBHvT6TZRy?cluster=devnet"
+        },
+        {
+          "kind": "native sponsored setup",
+          "hash": "2YVKLrAZ7vmG5a2U3aKgGTzjQqaidy8PJcxiBCD6jsf2SAk6raoSFFb5KMZB5mRKV9ZEZ6kuug2MjJnYhpJ55yyz",
+          "feeLamports": 10000,
+          "computeUnits": 54887,
+          "explorerUrl": "https://explorer.solana.com/tx/2YVKLrAZ7vmG5a2U3aKgGTzjQqaidy8PJcxiBCD6jsf2SAk6raoSFFb5KMZB5mRKV9ZEZ6kuug2MjJnYhpJ55yyz?cluster=devnet"
+        },
+        {
+          "kind": "deposit",
+          "hash": "2dHKUmoEK2AGd7sRn9QAfxjVermrmDeTCnGzSkcFJ7eV6cenimpJtN8GJydjVcnMicKDjecX9Mnedyy5HLtvx3Q5",
+          "feeLamports": 5000,
+          "computeUnits": 150,
+          "explorerUrl": "https://explorer.solana.com/tx/2dHKUmoEK2AGd7sRn9QAfxjVermrmDeTCnGzSkcFJ7eV6cenimpJtN8GJydjVcnMicKDjecX9Mnedyy5HLtvx3Q5?cluster=devnet"
+        },
+        {
+          "kind": "settle",
+          "hash": "5UWNrjBn6i7RrwVkKBgjGiDxffxCNCMzcea8M61WbQwgZsVJrddSrHiRc9EmBa7QCPmKssSvX8kraC62kpw6MPLk",
+          "feeLamports": 5000,
+          "computeUnits": 8705,
+          "explorerUrl": "https://explorer.solana.com/tx/5UWNrjBn6i7RrwVkKBgjGiDxffxCNCMzcea8M61WbQwgZsVJrddSrHiRc9EmBa7QCPmKssSvX8kraC62kpw6MPLk?cluster=devnet"
+        },
+        {
+          "kind": "permissionless SPL faucet",
+          "hash": "58xZojcSQ5HBG9Yu4SyveVBXTTwoD9Jd7ha49XCi9JkJkZE1UHjexWW5jGSMiyJkDhkkwUDckTRiHmTA3EWr5wLL",
+          "feeLamports": 5000,
+          "computeUnits": 24241,
+          "explorerUrl": "https://explorer.solana.com/tx/58xZojcSQ5HBG9Yu4SyveVBXTTwoD9Jd7ha49XCi9JkJkZE1UHjexWW5jGSMiyJkDhkkwUDckTRiHmTA3EWr5wLL?cluster=devnet"
+        },
+        {
+          "kind": "SPL payment-address setup",
+          "hash": "4thMVYYNdUxrgPTWCS5iV2bF1ndNtnym4jg1UYhPUhdbqTh1DZ2DCqstFwzbwFcyZQfam3jQ3g6fYNSBJYJw6pno",
+          "feeLamports": 10000,
+          "computeUnits": 76314,
+          "explorerUrl": "https://explorer.solana.com/tx/4thMVYYNdUxrgPTWCS5iV2bF1ndNtnym4jg1UYhPUhdbqTh1DZ2DCqstFwzbwFcyZQfam3jQ3g6fYNSBJYJw6pno?cluster=devnet"
+        },
+        {
+          "kind": "deposit",
+          "hash": "5WWpd8dhFyWRxRN7BzY7XNnMqM3dCNpPSwJpVKcpG51fcmHJtuHWzGsVR4AATFtzcdge9BKvLVmP18Lj85vCK9kJ",
+          "feeLamports": 5000,
+          "computeUnits": 105,
+          "explorerUrl": "https://explorer.solana.com/tx/5WWpd8dhFyWRxRN7BzY7XNnMqM3dCNpPSwJpVKcpG51fcmHJtuHWzGsVR4AATFtzcdge9BKvLVmP18Lj85vCK9kJ?cluster=devnet"
+        },
+        {
+          "kind": "settle",
+          "hash": "5d4FMPzfYrSdzEmixA8q6doSnNtjQCKi7MA6WWB9UfafHBLCnT3ASikyAPn2UZ8zWF3uyA5Au8EemcdGmcBHWjjS",
+          "feeLamports": 5000,
+          "computeUnits": 45362,
+          "explorerUrl": "https://explorer.solana.com/tx/5d4FMPzfYrSdzEmixA8q6doSnNtjQCKi7MA6WWB9UfafHBLCnT3ASikyAPn2UZ8zWF3uyA5Au8EemcdGmcBHWjjS?cluster=devnet"
+        },
+        {
+          "kind": "deposit",
+          "hash": "tYinz5p2Hv6UDBuxm3DtZnF3fUojSgvnHY4VNdLTdkyikW6PDZ3JLUxA1irNDL8d8XHyc7FBmeQUtj8r5j4e5SG",
+          "feeLamports": 5000,
+          "computeUnits": 105,
+          "explorerUrl": "https://explorer.solana.com/tx/tYinz5p2Hv6UDBuxm3DtZnF3fUojSgvnHY4VNdLTdkyikW6PDZ3JLUxA1irNDL8d8XHyc7FBmeQUtj8r5j4e5SG?cluster=devnet"
+        },
+        {
+          "kind": "settle",
+          "hash": "5Rf3fWidxQM9SvsNzTaTPcWJMNTiRi6oTCxWsbdp1b3ffiHCX37FTAt9usFMzTP5eChwAPeLjKd48c1m54EUNgat",
+          "feeLamports": 5000,
+          "computeUnits": 27202,
+          "explorerUrl": "https://explorer.solana.com/tx/5Rf3fWidxQM9SvsNzTaTPcWJMNTiRi6oTCxWsbdp1b3ffiHCX37FTAt9usFMzTP5eChwAPeLjKd48c1m54EUNgat?cluster=devnet"
+        },
+        {
+          "kind": "deposit",
+          "hash": "3xGmBrP9GeQqUQq5usCXYapsporD95vGS8nUMtAzmWwwiHzAYqzzUmt4TFZxDtFUubxr6bnBRynZAeR69vXiFKDB",
+          "feeLamports": 5000,
+          "computeUnits": 105,
+          "explorerUrl": "https://explorer.solana.com/tx/3xGmBrP9GeQqUQq5usCXYapsporD95vGS8nUMtAzmWwwiHzAYqzzUmt4TFZxDtFUubxr6bnBRynZAeR69vXiFKDB?cluster=devnet"
+        },
+        {
+          "kind": "settle",
+          "hash": "3X4aB4XJ57JycE5aNxhHfhy4FRJCvuUKWMM1X6eYD5JG95zr2GmBjCX3AL4GQfhzLFtezAz2KE4L7KjhBNU8uRJU",
+          "feeLamports": 5000,
+          "computeUnits": 19189,
+          "explorerUrl": "https://explorer.solana.com/tx/3X4aB4XJ57JycE5aNxhHfhy4FRJCvuUKWMM1X6eYD5JG95zr2GmBjCX3AL4GQfhzLFtezAz2KE4L7KjhBNU8uRJU?cluster=devnet"
+        },
+        {
+          "kind": "zero-reward SPL setup",
+          "hash": "3PJN9YdirEQgcSpWMSSB2Kaf76kEdGr93Ganvz4tsZnu8zUM677dBrDGCizjfPpGsnteqekKhuBdmSXT2FfgAU8E",
+          "feeLamports": 10000,
+          "computeUnits": 79220,
+          "explorerUrl": "https://explorer.solana.com/tx/3PJN9YdirEQgcSpWMSSB2Kaf76kEdGr93Ganvz4tsZnu8zUM677dBrDGCizjfPpGsnteqekKhuBdmSXT2FfgAU8E?cluster=devnet"
+        },
+        {
+          "kind": "deposit",
+          "hash": "4pj6BLHPAGncWk3viqFKLjPjq2mvuGgE6YU8aKg2XzjroET1xMJrD31FFJt6MHKdc7CNbA4pffHhxxLaDzfY1aLh",
+          "feeLamports": 5000,
+          "computeUnits": 105,
+          "explorerUrl": "https://explorer.solana.com/tx/4pj6BLHPAGncWk3viqFKLjPjq2mvuGgE6YU8aKg2XzjroET1xMJrD31FFJt6MHKdc7CNbA4pffHhxxLaDzfY1aLh?cluster=devnet"
+        },
+        {
+          "kind": "settle",
+          "hash": "3GxoRoNytkKG1P3CrqCrzoqtwDJym8VkKT3gxCrX2V74aLLsNbnq5B4rTv8hHYpoa9vDBoyywz4EYSSieYcFSw7j",
+          "feeLamports": 5000,
+          "computeUnits": 19187,
+          "explorerUrl": "https://explorer.solana.com/tx/3GxoRoNytkKG1P3CrqCrzoqtwDJym8VkKT3gxCrX2V74aLLsNbnq5B4rTv8hHYpoa9vDBoyywz4EYSSieYcFSw7j?cluster=devnet"
+        },
+        {
+          "kind": "wrong-mint deposit",
+          "hash": "2V9LaiDRTr3wJ61FQcFEiz5grUgwnkaBRY116U68RUo5db6NnyEHbw2BSrVuzL6bkbALhBRTPeXwYKB3NroJeZ1s",
+          "feeLamports": 5000,
+          "computeUnits": 120,
+          "explorerUrl": "https://explorer.solana.com/tx/2V9LaiDRTr3wJ61FQcFEiz5grUgwnkaBRY116U68RUo5db6NnyEHbw2BSrVuzL6bkbALhBRTPeXwYKB3NroJeZ1s?cluster=devnet"
+        },
+        {
+          "kind": "wrong-mint recovery",
+          "hash": "3Pd7WvSwzuvQGwndZeXvASqSfVmbhVugaVVDZHAMKRHkqzGXpKHVGuBfAKkBZyrxYFcyrtXzABTLnBxHuGpi8FQL",
+          "feeLamports": 5000,
+          "computeUnits": 13226,
+          "explorerUrl": "https://explorer.solana.com/tx/3Pd7WvSwzuvQGwndZeXvASqSfVmbhVugaVVDZHAMKRHkqzGXpKHVGuBfAKkBZyrxYFcyrtXzABTLnBxHuGpi8FQL?cluster=devnet"
+        }
+      ]
+    },
+    {
+      "chain": "tron",
+      "status": "passed",
+      "chainId": "3448148188",
+      "deployment": "TNSjMTiHYgM1nvFxZ6iDcqMMxjZqhX4LcL",
+      "scope": "App wallet-client signing, deposit and settlement using environment-backed testnet transactions",
+      "reports": [
+        "tron-wallet.json"
+      ],
+      "checks": [
+        "TIP-712 intent signing through app connector",
+        "payment-link verification",
+        "mint/deposit via app client",
+        "underpayment settlement and executor reward",
+        "overpayment settlement",
+        "live funding status changes",
+        "receiver deployed and reused through collect"
+      ],
+      "transactions": [
+        {
+          "kind": "mint",
+          "hash": "53db86996e87ac12e04ec9086d8690f4c9eedf8b0b67873e990b8bfc2914068f",
+          "status": "confirmed",
+          "chain": "tron",
+          "at": "2026-10-12T21:28:56.280Z",
+          "explorerUrl": "https://nile.tronscan.org/#/transaction/53db86996e87ac12e04ec9086d8690f4c9eedf8b0b67873e990b8bfc2914068f"
+        },
+        {
+          "kind": "deposit",
+          "hash": "207a3411bd290a1b2e6e09d4dacdff8c7926c2a21f7004efe30f02ddec0117d1",
+          "status": "confirmed",
+          "chain": "tron",
+          "at": "2026-10-12T21:29:57.251Z",
+          "explorerUrl": "https://nile.tronscan.org/#/transaction/207a3411bd290a1b2e6e09d4dacdff8c7926c2a21f7004efe30f02ddec0117d1"
+        },
+        {
+          "kind": "settle",
+          "hash": "390fc89312fa38e854ebae448febfd112a4ccb57fff8d40b908113331b6fd777",
+          "status": "confirmed",
+          "chain": "tron",
+          "at": "2026-10-12T21:31:00.760Z",
+          "explorerUrl": "https://nile.tronscan.org/#/transaction/390fc89312fa38e854ebae448febfd112a4ccb57fff8d40b908113331b6fd777"
+        },
+        {
+          "kind": "deposit",
+          "hash": "84ad16cc9ad742ff7a037f7c55c0fc39a46917c10fe7c57bed076a447b1e50f3",
+          "status": "confirmed",
+          "chain": "tron",
+          "at": "2026-10-12T21:32:01.815Z",
+          "explorerUrl": "https://nile.tronscan.org/#/transaction/84ad16cc9ad742ff7a037f7c55c0fc39a46917c10fe7c57bed076a447b1e50f3"
+        },
+        {
+          "kind": "settle",
+          "hash": "3fe7952534b62ca2025c88ac0ba8a48c05fd24cc420f13da1ea92058ef3729aa",
+          "status": "confirmed",
+          "chain": "tron",
+          "at": "2026-10-12T21:33:08.101Z",
+          "explorerUrl": "https://nile.tronscan.org/#/transaction/3fe7952534b62ca2025c88ac0ba8a48c05fd24cc420f13da1ea92058ef3729aa"
+        }
+      ]
+    },
+    {
+      "chain": "bnb",
+      "status": "skipped",
+      "reason": "User requested skipping after testnet gas shortage. Initial underpayment settled; later test deposit is preserved with its signed order.",
+      "report": "bnb-wallet.json"
+    }
+  ],
+  "release": "release.json"
+}

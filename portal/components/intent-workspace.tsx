@@ -682,7 +682,7 @@ export default function Workspace({
                 <>
                   <div className="queue-summary">
                     <div><strong>{orders.filter((o) => o.network.chain === chain && BigInt(o.balance) > 0n).length}</strong><span>Funded intents</span></div>
-                    <div><strong>{orders.filter((o) => o.network.chain === chain && collectionStatus(o).status === "ready").length}</strong><span>Ready to execute</span></div>
+                    <div><strong>{orders.filter((o) => o.network.chain === chain && o.verifiedAt && collectionStatus(o).status === "ready").length}</strong><span>Ready to execute</span></div>
                     <div><strong>{orders.filter((o) => o.network.chain === chain && collectionStatus(o).status === "sponsor").length}</strong><span>Need sponsorship</span></div>
                   </div>
                   <div className="queue-toolbar">
@@ -721,12 +721,12 @@ export default function Workspace({
                     <Link2 size={32} />
                     <h3>
                       {mode === "executor"
-                        ? `No ${fundedOnly ? "funded " : ""}orders on ${names[chain]} yet`
+                        ? search ? "No matching intents" : refreshing ? "Checking intents…" : `No ${fundedOnly ? "funded " : ""}orders on ${names[chain]} yet`
                         : "Your next payment starts here"}
                     </h3>
                     <p>
                       {mode === "executor"
-                        ? "Import a signed order, or wait for a merchant to publish one."
+                        ? search ? "Try another reference, address or asset." : "Import a signed order, or wait for a merchant to publish one."
                         : "Connect your wallet and create a payment link."}
                     </p>
                   </div>
@@ -761,7 +761,7 @@ export default function Workspace({
                           <span className={`status ${fundingView(o, o.terms.amount).status}`}>
                             {fundingView(o, o.terms.amount).label}
                           </span>
-                          <small className={`execution-state ${collectionStatus(o).status}`}>{collectionStatus(o).label}</small>
+                          <small className={`execution-state ${collectionStatus(o).status}`}>{o.verifiedAt ? collectionStatus(o).label : "Chain check unavailable"}</small>
                         </div>
                       ) : <span className={`status ${state(o)}`}>{state(o)}</span>}
                       <ArrowRight size={16} />

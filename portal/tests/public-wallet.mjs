@@ -120,7 +120,12 @@ try {
     try { const event = transfers.parseLog(l); return event?.args.to.toLowerCase() === merchant.address.toLowerCase() ? sum + event.args.value : sum; } catch { return sum; }
   }, 0n);
   assert.equal(merchantReceipt(receipt), 8000000n);
-  assert.notEqual(await p.getCode(order.address), "0x", "first settlement deploys the receiver atomically");
+  let deployedCode = "0x";
+  for (let retry = 0; retry < 12 && deployedCode === "0x"; retry++) {
+    deployedCode = await p.getCode(order.address, receipt.blockNumber);
+    if (deployedCode === "0x") await new Promise(resolve => setTimeout(resolve, 1500));
+  }
+  assert.notEqual(deployedCode, "0x", "first settlement deploys the receiver atomically");
   stage = "overpayment";
   await act(config, order, "deposit", "500", () => {}, payer.address);
   for (let retry = 0; retry < 12; retry++) {

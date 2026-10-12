@@ -1,0 +1,52 @@
+{
+  "at": "2026-10-12T21:27:40.667Z",
+  "chain": "tron",
+  "status": "passed",
+  "stage": "settle",
+  "checks": [
+    "TIP-712 intent signing through app connector",
+    "payment-link verification",
+    "mint/deposit via app client",
+    "underpayment settlement and executor reward",
+    "overpayment settlement",
+    "live funding status changes",
+    "receiver deployed and reused through collect"
+  ],
+  "transactions": [
+    {
+      "kind": "mint",
+      "hash": "53db86996e87ac12e04ec9086d8690f4c9eedf8b0b67873e990b8bfc2914068f",
+      "status": "confirmed",
+      "chain": "tron",
+      "at": "2026-10-12T21:28:56.280Z"
+    },
+    {
+      "kind": "deposit",
+      "hash": "207a3411bd290a1b2e6e09d4dacdff8c7926c2a21f7004efe30f02ddec0117d1",
+      "status": "confirmed",
+      "chain": "tron",
+      "at": "2026-10-12T21:29:57.251Z"
+    },
+    {
+      "kind": "settle",
+      "hash": "390fc89312fa38e854ebae448febfd112a4ccb57fff8d40b908113331b6fd777",
+      "status": "confirmed",
+      "chain": "tron",
+      "at": "2026-10-12T21:31:00.760Z"
+    },
+    {
+      "kind": "deposit",
+      "hash": "84ad16cc9ad742ff7a037f7c55c0fc39a46917c10fe7c57bed076a447b1e50f3",
+      "status": "confirmed",
+      "chain": "tron",
+      "at": "2026-10-12T21:32:01.815Z"
+    },
+    {
+      "kind": "settle",
+      "hash": "3fe7952534b62ca2025c88ac0ba8a48c05fd24cc420f13da1ea92058ef3729aa",
+      "status": "confirmed",
+      "chain": "tron",
+      "at": "2026-10-12T21:33:08.101Z"
+    }
+  ]
+}
