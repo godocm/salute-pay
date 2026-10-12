@@ -275,14 +275,7 @@ header {
   font-size: 28px;
   font-weight: 600;
 }
-.brand:before {
-  content: "";
-  display: inline-block;
-  width: 34px;
-  height: 34px;
-  background: url("/favicon.svg") center/contain no-repeat;
-  margin-right: 4px;
-}
+
 .brand small {
   font-size: 28px;
   letter-spacing: -1px;
@@ -426,3 +419,22 @@ header nav .nav-launch {
   padding: 8px 12px;
   font-size: 11px;
 }
+
+/* Align the pricing navigation and keep its action on the same baseline. */
+header nav { align-items: center; flex-wrap: wrap; }
+header nav .nav-launch { margin-top: 0; }
+header .brand { white-space: nowrap; }
+@media (max-width: 1000px) {
+  header { flex-wrap: wrap; gap: 18px; }
+  header nav { width: 100%; }
+}
+@media (max-width: 640px) {
+  header nav {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px 10px;
+    font-size: 11px;
+  }
+  header nav .nav-launch { justify-content: center; }
+}
+.card.featured a.button { color: #14263d; }

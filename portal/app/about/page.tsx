@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowUpRight, ShieldCheck, Code2, Wallet } from "lucide-react";
+import { ArrowUpRight, ShieldCheck, Code2, Wallet, Mail } from "lucide-react";
 import { SiteHeader, SiteFooter } from "../../components/site-shell";
 export const metadata: Metadata = {
   title: "About · Salute Pay",
@@ -84,9 +84,14 @@ export default function Page() {
               <br />
               Talk to the team.
             </h2>
-            <p>Follow the project, explore the code or reach us on LinkedIn.</p>
+            <p>Follow the project, explore the code or contact us by email.</p>
           </div>
           <div className="contact-links">
+            <a href="mailto:support@salutebank.com">
+              <Mail size={23} aria-hidden="true" />
+              <span>Email<small>support@salutebank.com</small></span>
+              <ArrowUpRight size={18} />
+            </a>
             <a
               href="https://www.linkedin.com/company/salute-bank"
               target="_blank"

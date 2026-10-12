@@ -625,7 +625,7 @@ export default function DeveloperDocs() {
             <h2>Act on verified chain events.</h2>
             <p>
               Save your HTTPS endpoint in Developer settings. New payments
-              default webhook delivery on when a URL exists. The server verifies
+              send events only when you choose “Send webhook events” at creation. The server verifies
               chain receipts and writes events to a transactional outbox; a
               browser-supplied hash is only a verification candidate.
             </p>

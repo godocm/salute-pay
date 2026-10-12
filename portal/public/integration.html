@@ -196,9 +196,9 @@ const checkoutURL = `${location.origin}/pay/${payment.slug}`;</code></pre>
         <h2>3. Webhook delivery</h2>
         <p>
           Connect your wallet in Developer settings, sign in, save a webhook URL
-          and copy its signing secret into your server environment. New payment
-          creation defaults the webhook checkbox on when a URL exists; you can
-          disable it for a particular order.
+          and copy its signing secret into your server environment. New payments send events only when you choose “Send webhook events”
+          at creation. Delivery uses the saved endpoint at each attempt, including
+          retries; changing the URL does not enable events for existing orders.
         </p>
         <ul>
           <li>

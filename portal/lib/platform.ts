@@ -1,5 +1,6 @@
 import type { Intent, Network } from "./intents";
-import { connect, signLogin, parseLink } from "./intents";
+import { connect, signLogin, parseLink, isEvm } from "./intents";
+import { sameWallet } from "./execution";
 export type Account = {
   address: string;
   family: string;
@@ -25,8 +26,17 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   return b as T;
 }
 export async function login(n: Network) {
-  const address = await connect(n),
-    c = await api<{ id: string; message: string }>("auth/challenge", {
+  const address = await connect(n);
+  try {
+    const existing = await api<Account>("me");
+    if (
+      existing.family === (isEvm(n.chain) ? "evm" : n.chain) &&
+      sameWallet(n.chain, existing.address, address)
+    ) return existing;
+  } catch {
+    // An expired or unavailable session requires fresh wallet authorization.
+  }
+  const c = await api<{ id: string; message: string }>("auth/challenge", {
       method: "POST",
       body: JSON.stringify({ chain: n.chain, address }),
     }),

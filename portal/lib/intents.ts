@@ -384,21 +384,20 @@ export function chooseWallet(id: string) {
   selectedEvmProvider = announcedWallets.get(id)?.provider;
   useWalletConnect = id === "walletconnect";
 }
-export function watchEvmWallet(f: () => void) {
+export function watchEvmWallet(f: (account: string) => void) {
   const provider = ((useWalletConnect
     ? activeWalletConnectProvider()
     : selectedEvmProvider) ||
     (window as unknown as { ethereum?: InjectedProvider }).ethereum) as
     | (InjectedProvider & {
-        on?: (e: string, f: () => void) => void;
-        removeListener?: (e: string, f: () => void) => void;
+        on?: (e: string, f: (accounts: string[]) => void) => void;
+        removeListener?: (e: string, f: (accounts: string[]) => void) => void;
       })
     | undefined;
-  provider?.on?.("accountsChanged", f);
-  provider?.on?.("chainChanged", f);
+  const changed = (accounts: string[]) => f(accounts[0] || "");
+  provider?.on?.("accountsChanged", changed);
   return () => {
-    provider?.removeListener?.("accountsChanged", f);
-    provider?.removeListener?.("chainChanged", f);
+    provider?.removeListener?.("accountsChanged", changed);
   };
 }
 export function validateEvmNetwork(n: Network) {

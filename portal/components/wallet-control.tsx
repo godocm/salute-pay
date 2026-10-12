@@ -13,7 +13,7 @@ import {
   watchEvmWallet,
   type Network,
 } from "../lib/intents";
-import { selectSolana } from "../lib/wallet-connectors";
+import { selectSolana, watchWalletAccounts } from "../lib/wallet-connectors";
 export function WalletControl({
   network,
   account,
@@ -32,7 +32,6 @@ export function WalletControl({
     [busy, setBusy] = useState(false);
   useEffect(() => {
     let alive = true;
-    onAccount("");
     setSelected("");
     if (isEvm(network.chain))
       wallets().then(
@@ -55,9 +54,11 @@ export function WalletControl({
     };
   }, [network.chain]);
   useEffect(() => {
-    if (!account || !isEvm(network.chain)) return;
-    return watchEvmWallet(() => onAccount(""));
-  }, [account, network.chain]);
+    if (!account) return;
+    return isEvm(network.chain)
+      ? watchEvmWallet(onAccount)
+      : watchWalletAccounts(network.chain, onAccount);
+  }, [account, network.chain, onAccount]);
   async function toggle() {
     setBusy(true);
     try {

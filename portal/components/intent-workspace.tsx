@@ -3,6 +3,9 @@ import { planAllowsNetwork, planNetworkMessage } from "../lib/plans";
 import { executionPreview, afterConfirmation, collectionStatus } from "../lib/execution";
 import { cumulativeReceived, fundingProgress, fundingView } from "../lib/payment-status";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
+import { useWorkspaceWallet } from "./workspace-wallet";
+import { sameWallet } from "../lib/execution";
 import {
   ArrowUpRight,
   Copy,
@@ -78,12 +81,11 @@ export default function Workspace({
 }: {
   mode?: "merchant" | "executor" | "developer";
 }) {
+  const { chain, setChain, account, setAccount } = useWorkspaceWallet();
   const [configs, setConfigs] = useState<Record<Chain, Network>>(defaults),
     [ready, setReady] = useState<Set<string>>(new Set()),
     [db, setDb] = useState(false),
     [configLoaded, setConfigLoaded] = useState(false),
-    [chain, setChain] = useState<Chain>("tempo"),
-    [account, setAccount] = useState(""),
     [me, setMe] = useState<Account | null>(null),
     [orders, setOrders] = useState<Intent[]>([]),
     [selected, setSelected] = useState<Intent | null>(null);
@@ -216,18 +218,10 @@ export default function Workspace({
       })
       .catch(() => setError("Could not load network configuration."));
     setOrders(saved());
-    api<Account>("me")
-      .then((m) => {
-        setMe(m);
-        setWebhookUrl(m.webhookUrl);
-        setWebhook(Boolean(m.webhookUrl));
-      })
-      .catch(() => {});
   }, []);
   useEffect(() => {
     setToken(configs[chain].token);
     setNative(false);
-    setMe(null);
     setReview(false);
     loadGeneration.current++;
   }, [chain, configs]);
@@ -251,11 +245,24 @@ export default function Workspace({
       document.removeEventListener("visibilitychange", onVisible);
     };
   }, [configLoaded, db, mode, chain, configs]);
+  useEffect(() => {
+    let alive = true;
+    setMe(null);
+    setWebhookUrl("");
+    setWebhook(false);
+    if (db && account) api<Account>("me").then((m) => {
+      if (alive && m.family === (isEvm(chain) ? "evm" : chain) &&
+          sameWallet(chain, m.address, account)) {
+        setMe(m);
+        setWebhookUrl(m.webhookUrl);
+      }
+    }).catch(() => {});
+    return () => { alive = false; };
+  }, [db, account, chain]);
   async function signedIn() {
     const m = await login(n);
     setMe(m);
     setWebhookUrl(m.webhookUrl);
-    setWebhook(Boolean(m.webhookUrl));
     return m;
   }
   async function newPayment() {
@@ -582,8 +589,8 @@ export default function Workspace({
             <h2>Webhook destination</h2>
             <p>
               Sign in with your merchant wallet to set a public HTTPS endpoint.
-              New payments enable webhooks by default when an endpoint is
-              configured.
+              Choose “Send webhook events” for each hosted payment you want to
+              notify. Saving an endpoint does not enable delivery automatically.
             </p>
             <button
               className="button secondary"
@@ -617,7 +624,7 @@ export default function Workspace({
                   setMe((m) =>
                     m ? { ...m, webhookUrl: result.webhookUrl } : m,
                   );
-                  setWebhook(Boolean(result.webhookUrl));
+                  if (!result.webhookUrl) setWebhook(false);
                   setNotice("Webhook destination saved.");
                 })
               }
@@ -649,9 +656,23 @@ export default function Workspace({
                 </p>
               </>
             )}
-            <a className="button secondary" href="/integration.html">
+            <h3>Test with Webhook.site</h3>
+            <ol>
+              <li>Open <a href="https://webhook.site" target="_blank" rel="noreferrer">webhook.site</a> and copy “Your unique URL”.</li>
+              <li>Paste the HTTPS URL above and save the endpoint.</li>
+              <li>Create a hosted payment with “Send webhook events” checked.</li>
+              <li>Watch Webhook.site for payment.created. Fund and collect with test assets to see verified payment events after the scheduled watcher runs.</li>
+            </ol>
+            <p>
+              No secret is needed to inspect requests on Webhook.site. Salute’s
+              signing secret lets your own server verify the salute-signature
+              header before processing events; it is not a Webhook.site API key.
+              Delivery uses your saved endpoint at each attempt, including retries.
+              Changing the URL does not enable events for existing payments.
+            </p>
+            <Link className="button secondary" href="/docs#webhooks">
               Read API and webhook docs <ArrowUpRight size={16} />
-            </a>
+            </Link>
           </section>
         ) : (
           <div className={`workspace-grid ${mode === "executor" ? "executor-workspace" : ""}`}>
@@ -914,9 +935,9 @@ export default function Workspace({
                   Send webhook events
                 </label>
                 {!me?.webhookUrl && (
-                  <a className="text-link" href="/developer">
+                  <Link className="text-link" href="/developer">
                     Set your webhook URL in Developer settings →
-                  </a>
+                  </Link>
                 )}
                 <button
                   className="button primary wide"

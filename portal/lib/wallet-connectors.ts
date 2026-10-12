@@ -171,6 +171,25 @@ export async function walletConnectProvider(n: Network): Promise<EipProvider> {
 export function activeWalletConnectProvider() {
   return wc;
 }
+export function watchWalletAccounts(chain: string, changed: (account: string) => void) {
+  if (chain === "solana" && sol) {
+    const wallet = sol;
+    if (!wallet.features["standard:events"]) return;
+    return feature<{
+      on: (event: "change", listener: (properties: { accounts?: readonly WalletAccount[] }) => void) => () => void;
+    }>(wallet, "standard:events").on("change", ({ accounts }) => {
+      if (!accounts) return;
+      solAccount = accounts.find((a) => a.chains.some((c) => c.startsWith("solana:")));
+      changed(solAccount?.address || "");
+    });
+  }
+  if (chain === "tron" && tron) {
+    const adapter = tron;
+    const listener = (address: string) => changed(address || "");
+    adapter.on("accountsChanged", listener);
+    return () => { adapter.off("accountsChanged", listener); };
+  }
+}
 export async function disconnectWallet() {
   await wc?.disconnect?.();
   wc = undefined;

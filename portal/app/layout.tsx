@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./marketing.css";
+import { WorkspaceWalletProvider } from "../components/workspace-wallet";
 
 export const metadata: Metadata = {
   title: "Salute Pay — Non-custodial payments",
@@ -19,7 +20,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-scroll-behavior="smooth">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased">
+        <WorkspaceWalletProvider>{children}</WorkspaceWalletProvider>
+      </body>
     </html>
   );
 }
