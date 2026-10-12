@@ -28,7 +28,7 @@ This is prototype testing, not an independent audit. Actual WalletConnect pairin
 
 ## Submission release checks · 2026-10-12
 
-- Changed the headline to “No custody. No fees. No wallet connection.” with an adjacent 0% collection-fee qualification and an explicit customer-transfer explanation. Merchants and executors still sign with wallets.
+- Changed the headline to “No custody. No fees. No wallet pairing.” with identical type sizing on all three lines, an adjacent 0% collection-fee qualification and an explicit customer-transfer explanation. Merchants and executors still sign with wallets.
 - Executor queue filters by network and defaults to funded orders, supports hosted-link/offline-link/JSON import, and refreshes indexed snapshots every 20 seconds while visible. Selection verifies the live chain balance. Order identity includes chain, chain ID, deployment and address.
 - Collection review handles case-sensitive Solana/TRON identities, zero rewards, self-collection and tiny sponsored balances. A changed balance requires another review; a pending collection blocks another submission in this browser until receipt reconciliation. Uncertain RPC errors retain pending status. A confirmed collection remains successful when receipt reporting or balance refresh is unavailable.
 - Recovery receipts use the actual execution-chain explorer, preserve pending/reverted/replaced status, and reject a quote whose asset differs from the selected recovery asset. These checks do not add bridging or refunds.

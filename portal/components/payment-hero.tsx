@@ -51,7 +51,7 @@ export function PaymentHero() {
               <br />
               No fees.
               <br />
-              <span className="hero-wallet-line">No wallet connection.</span>
+              No wallet pairing.
             </span>
           </h1>
           <div className="hero-fee-note">
