@@ -1,5 +1,6 @@
 "use client";
 import { Brand } from "./brand";
+import Link from "next/link";
 
 import { useEffect, useState, useRef } from "react";
 import QRCode from "qrcode";
@@ -39,7 +40,7 @@ export default function PaymentPage({ slug }: { slug: string }) {
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false),
     [account, setAccount] = useState(""),
-    [amount, setAmount] = useState(""),
+    [method, setMethod] = useState<"wallet" | "transfer">("wallet"),
     [receipt, setReceipt] = useState<Receipt | null>(null),
     [copied, setCopied] = useState(false),
     [statusWarning, setStatusWarning] = useState(""),
@@ -51,14 +52,16 @@ export default function PaymentPage({ slug }: { slug: string }) {
   }, []);
   useEffect(() => {
     let alive = true;
-    setIntent(null);
-    setAccount("");
-    setError("");
-    setReceipt(null);
-    setStatusWarning("");
-    setCopied(false);
-    setQr("");
-    setAmount("");
+    queueMicrotask(() => {
+      if (!alive) return;
+      setIntent(null);
+      setAccount("");
+      setError("");
+      setReceipt(null);
+      setStatusWarning("");
+      setCopied(false);
+      setQr("");
+    });
     async function load() {
       try {
         const deployment = await api<{ networks: Record<string, Network> }>(
@@ -74,17 +77,6 @@ export default function PaymentPage({ slug }: { slug: string }) {
         const current = await refresh(configFor(intent, networks), intent);
         if (alive) {
           setIntent(current);
-          const remaining = fundingProgress(
-            current.received ?? "0",
-            intent.terms.amount,
-          ).remaining;
-          setAmount(
-            slug === "offline"
-              ? value(intent.terms.amount, intent.decimals)
-              : remaining > 0n
-                ? value(remaining, intent.decimals)
-                : "",
-          );
           const image = await QRCode.toDataURL(intent.address, {
             width: 240,
             margin: 2,
@@ -104,8 +96,9 @@ export default function PaymentPage({ slug }: { slug: string }) {
       alive = false;
     };
   }, [slug, linkRevision]);
+  const hasIntent = i !== null;
   useEffect(() => {
-    if (slug === "offline" || !i) return;
+    if (slug === "offline" || !hasIntent) return;
     const id = setInterval(
       () =>
         api<Intent & { status: string }>(`payments/${slug}`)
@@ -131,9 +124,21 @@ export default function PaymentPage({ slug }: { slug: string }) {
       15000,
     );
     return () => clearInterval(id);
-  }, [slug, Boolean(i)]);
+  }, [slug, hasIntent]);
   async function pay() {
-    if (!i || busy || paymentLock.current) return;
+    if (
+      !i ||
+      busy ||
+      paymentLock.current ||
+      receipt?.status === "confirmed" ||
+      receipt?.status === "pending"
+    )
+      return;
+    const remaining = fundingProgress(
+      i.received ?? i.balance,
+      i.terms.amount,
+    ).remaining;
+    if (remaining <= 0n) return;
     paymentLock.current = true;
     setBusy(true);
     setError("");
@@ -142,11 +147,10 @@ export default function PaymentPage({ slug }: { slug: string }) {
         configFor(i, configs),
         i,
         "deposit",
-        amount,
+        value(remaining, i.decimals),
         setReceipt,
         account,
       );
-      setAmount("");
       try {
         setIntent(await refresh(configFor(i, configs), i));
       } catch {
@@ -171,18 +175,18 @@ export default function PaymentPage({ slug }: { slug: string }) {
   if (!i)
     return (
       <main className="checkout">
-        <a className="checkout-brand" href="/">
+        <Link className="checkout-brand" href="/">
           <Brand />
-        </a>
+        </Link>
         <section className="checkout-card">
           <h1>{error ? "Unable to open payment" : "Verifying payment…"}</h1>
           <p role={error ? "alert" : "status"}>
             {error ||
               "Checking the merchant signature, network and deposit address."}
           </p>
-          <a className="button secondary" href="/">
+          <Link className="button secondary" href="/">
             Return to Salute
-          </a>
+          </Link>
         </section>
       </main>
     );
@@ -196,26 +200,55 @@ export default function PaymentPage({ slug }: { slug: string }) {
       cumulative &&
       BigInt(i.balance) + BigInt(i.collected ?? "0") >
         BigInt(i.received ?? "0");
+  const complete = progress.remaining === 0n;
+  const submitted =
+    receipt?.status === "confirmed" || receipt?.status === "pending";
+  async function updateStatus() {
+    if (!i) return;
+    setBusy(true);
+    try {
+      const next =
+        slug === "offline" ? i : await api<Intent>(`payments/${slug}`);
+      setIntent(
+        await refresh(n, {
+          ...i,
+          received: next.received,
+          collected: next.collected,
+          settled: next.settled,
+        }),
+      );
+      setStatusWarning("");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Refresh failed.");
+    } finally {
+      setBusy(false);
+    }
+  }
   return (
-    <main className="checkout">
-      <a className="checkout-brand" href="/">
-        <Brand />
-      </a>
-      <span className="checkout-beta">BETA · TESTNET · TEST ASSETS ONLY</span>
-      <section className="checkout-card">
+    <main className="checkout checkout-simple">
+      <header className="checkout-topbar">
+        <Link className="checkout-brand" href="/">
+          <Brand />
+        </Link>
+        <span className="checkout-beta">TESTNET · TEST ASSETS ONLY</span>
+      </header>
+      <section
+        className="checkout-card compact-checkout"
+        aria-label="Payment request"
+      >
         <div className="checkout-head">
           <span className="merchant-avatar">
             {i.reference.slice(0, 1).toUpperCase()}
           </span>
           <div>
             <span className="eyebrow">PAYMENT REQUEST</span>
-            <h1>{i.reference}</h1>
-            <p>To merchant {short(i.terms.merchant)}</p>
+            <h1 title={i.reference}>{i.reference}</h1>
+            <p>To {short(i.terms.merchant)}</p>
           </div>
-          <ShieldCheck size={24} />
+          <ShieldCheck size={22} aria-label="Merchant signature verified" />
         </div>
         <div className="checkout-total">
-          <small>Invoice amount</small>
+          <small>Order amount · fixed</small>
           <strong>
             {expected} <span>{symbol}</span>
           </strong>
@@ -223,146 +256,157 @@ export default function PaymentPage({ slug }: { slug: string }) {
             {i.network.chain.toUpperCase()} ·{" "}
             {i.network.chainId === defaults[i.network.chain].chainId
               ? "TESTNET"
-              : "LOCAL TEST ENVIRONMENT"}
+              : "LOCAL TEST"}
           </span>
         </div>
-        <div className="network-warning">
-          <AlertTriangle size={20} />
-          <p>
-            Send only <b>{symbol}</b> on <b>{i.network.chain}</b> to this
-            address. Do not select another network in your exchange or wallet.
-            Wrong-network recovery is limited and is not guaranteed.
-          </p>
-        </div>
-        <section
-          className="wallet-payment"
-          aria-labelledby="wallet-payment-title"
-        >
-          <h2 id="wallet-payment-title">
-            <Wallet size={17} />
-            Pay with a connected wallet
-          </h2>
-          <p className="field-note">
-            Wallet connection is optional. You can also copy the payment address
-            below and send a transfer.{" "}
-            {n.chain === "solana"
-              ? "Use Phantom, Solflare or another installed Wallet Standard wallet. Select Devnet in your wallet."
-              : n.chain === "tron"
-                ? "Use the TronLink adapter and select Nile testnet."
-                : "Use a browser wallet or WalletConnect with a compatible testnet wallet."}
-          </p>
-          <WalletControl
-            key={intentKey(i)}
-            disabled={busy}
-            network={n}
-            account={account}
-            onAccount={setAccount}
-            onError={setError}
-          />
-          <label>
-            Amount to send ({symbol})
-            <input
-              inputMode="decimal"
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-            />
-          </label>
-          <p className="field-note">
-            The invoice requests {expected} {symbol}. A smaller payment remains
-            partial; an excess payment goes to the merchant. Exchange fees can
-            reduce the received amount.{" "}
-            {i.network.chain === "solana" && i.asset === "SOL"
-              ? "A new SOL address needs a rent-exempt first balance; ask the merchant to prepare it for tiny deposits."
-              : ""}
-          </p>
+        <div className={`compact-status ${status}`} role="status">
+          <span className="status-dot" />
+          <div>
+            <b>
+              {complete
+                ? cumulative
+                  ? "Invoice funded"
+                  : "Expected balance detected"
+                : pendingAccounting
+                  ? "Verifying received funds"
+                  : status === "partially_paid"
+                    ? "Partially paid"
+                    : "Awaiting payment"}
+            </b>
+            <small>
+              {complete
+                ? `${value(i.received ?? i.balance, i.decimals)} ${symbol} ${cumulative ? "received" : "observed balance"}`
+                : `${value(progress.remaining, i.decimals)} ${symbol} remaining`}
+              {!cumulative && " · Live balance only"}
+            </small>
+          </div>
           <button
-            className="button primary wide"
-            disabled={busy || !account || !amount}
-            onClick={pay}
+            className="icon-button"
+            aria-label="Refresh payment status"
+            disabled={busy}
+            onClick={updateStatus}
           >
-            {busy ? "Waiting for confirmation…" : "Review in wallet & pay"}
-            <ArrowUpRight size={17} />
+            <RefreshCw size={16} />
           </button>
-        </section>
-        <div className="checkout-method-divider">
-          <span>Or transfer from a wallet or exchange</span>
         </div>
-        <div className="checkout-payment">
-          <div className="qr-box">
-            {qr && (
-              <img
-                src={qr}
-                width={224}
-                height={224}
-                alt={`${symbol} payment address QR code on ${i.network.chain}`}
-              />
-            )}
-            <small>Scan the address · verify the network</small>
-          </div>
-          <div className="checkout-instructions">
-            <h2>Pay from a wallet or exchange</h2>
-            <p>
-              Copy the address below into your withdrawal or transfer. No wallet
-              connection to Salute is needed. Confirm the matching testnet and
-              asset; commercial exchanges typically do not support these test
-              assets.
-            </p>
-            <label>
-              Unique payment address
-              <div className="copy-field">
-                <code>{i.address}</code>
+        {!complete && !submitted && (
+          <>
+            <div
+              className="checkout-tabs"
+              role="group"
+              aria-label="Payment method"
+            >
+              <button
+                aria-pressed={method === "wallet"}
+                onClick={() => setMethod("wallet")}
+              >
+                <Wallet size={16} /> Wallet
+              </button>
+              <button
+                aria-pressed={method === "transfer"}
+                onClick={() => setMethod("transfer")}
+              >
+                <Copy size={16} /> Transfer / QR
+              </button>
+            </div>
+            {method === "wallet" ? (
+              <section className="compact-wallet" aria-label="Pay with wallet">
+                <p>
+                  Connect a wallet to pay on <b>{i.network.chain}</b>.
+                </p>
+                <WalletControl
+                  key={intentKey(i)}
+                  disabled={busy}
+                  network={n}
+                  account={account}
+                  onAccount={setAccount}
+                  onError={setError}
+                />
                 <button
-                  aria-label="Copy payment address"
-                  onClick={async () => {
-                    try {
-                      await navigator.clipboard.writeText(i.address);
-                      setCopied(true);
-                    } catch {
-                      setError(
-                        "Could not access clipboard. Select and copy the address.",
-                      );
-                    }
-                  }}
+                  className="button primary wide"
+                  disabled={busy || !account || pendingAccounting}
+                  onClick={pay}
                 >
-                  {copied ? <CheckCircle2 size={18} /> : <Copy size={18} />}
+                  {busy
+                    ? "Confirm in your wallet…"
+                    : `Pay ${value(progress.remaining, i.decimals)} ${symbol}`}
+                  <ArrowUpRight size={17} />
                 </button>
-              </div>
-            </label>
-            <dl>
-              <div>
-                <dt>Required network</dt>
-                <dd>
-                  {i.network.chain} · ID {i.network.chainId}
-                </dd>
-              </div>
-              <div>
-                <dt>Asset / token</dt>
-                <dd>{symbol}</dd>
-              </div>
-              <div>
-                <dt>Merchant destination</dt>
-                <dd>
-                  <code>{i.terms.merchant}</code>
-                </dd>
-              </div>
-              {i.terms.token !== "0x0000000000000000000000000000000000000000" &&
-                i.terms.token !== "11111111111111111111111111111111" &&
-                i.asset !== "TRX" && (
-                  <div>
-                    <dt>
-                      {n.chain === "solana" ? "Token mint" : "Token contract"}
-                    </dt>
-                    <dd>
-                      <code>{i.terms.token}</code>
-                    </dd>
-                  </div>
+                <small>
+                  Network fees are shown in your wallet before confirmation.
+                </small>
+              </section>
+            ) : (
+              <section
+                className="compact-transfer"
+                aria-label="Transfer payment"
+              >
+                {qr && (
+                  <img
+                    src={qr}
+                    width={140}
+                    height={140}
+                    alt={`Payment address on ${i.network.chain}`}
+                  />
                 )}
-            </dl>
-          </div>
-        </div>
-        {error && (
-          <div role="alert" className="feedback error">
-            {error}
+                <div>
+                  <p>
+                    Send{" "}
+                    <b>
+                      {value(progress.remaining, i.decimals)} {symbol}
+                    </b>{" "}
+                    on <b>{i.network.chain}</b>.
+                  </p>
+                  <span className="eyebrow">PAYMENT ADDRESS</span>
+                  <div className="copy-field">
+                    <code>{i.address}</code>
+                    <button
+                      aria-label="Copy payment address"
+                      onClick={async () => {
+                        try {
+                          await navigator.clipboard.writeText(i.address);
+                          setCopied(true);
+                        } catch {
+                          setError(
+                            "Select and copy the address; clipboard access is unavailable.",
+                          );
+                        }
+                      }}
+                    >
+                      {copied ? <CheckCircle2 size={18} /> : <Copy size={18} />}
+                    </button>
+                  </div>
+                  <small>
+                    {copied
+                      ? "Address copied"
+                      : "Scan or copy the address. Verify the network."}
+                  </small>
+                </div>
+              </section>
+            )}
+            <p className="compact-network-note">
+              <AlertTriangle size={14} /> Use only {symbol} on {i.network.chain}
+              . Other assets or networks may be unrecoverable.
+            </p>
+          </>
+        )}
+        {(complete || submitted) && (
+          <div className="checkout-success">
+            <CheckCircle2 size={32} />
+            <h2>
+              {complete
+                ? cumulative
+                  ? "Payment received"
+                  : "Balance detected"
+                : "Payment submitted"}
+            </h2>
+            <p>
+              {complete
+                ? cumulative
+                  ? "Merchant collection is tracked separately from funding."
+                  : "This offline link shows the current balance, not cumulative payment history."
+                : "Keep your receipt. Receipt verification may take a moment; do not resend."}
+            </p>
           </div>
         )}
         {receipt && (
@@ -383,121 +427,31 @@ export default function PaymentPage({ slug }: { slug: string }) {
             )}
           </div>
         )}
-        <div className={`payment-status ${status}`}>
-          <span className="status-dot" />
-          <div>
-            <b>
-              {status === "overpaid"
-                ? cumulative
-                  ? "Overpayment received"
-                  : "Excess balance detected"
-                : status === "paid"
-                  ? cumulative
-                    ? "Invoice funded"
-                    : "Expected balance detected"
-                  : status === "partially_paid"
-                    ? cumulative
-                      ? "Partial payment received"
-                      : "Partial balance detected"
-                    : cumulative
-                      ? pendingAccounting
-                        ? "Funds detected · Verifying"
-                        : "Awaiting payment"
-                      : "No balance awaiting collection"}
-            </b>
-            <dl className="checkout-progress">
-              <div>
-                <dt>{cumulative ? "Total received" : "Collectable balance"}</dt>
-                <dd>
-                  {value(i.received ?? i.balance, i.decimals)} {symbol}
-                </dd>
-              </div>
-              {progress.remaining > 0n && (
-                <div>
-                  <dt>Remaining {cumulative ? "to fund" : "versus invoice"}</dt>
-                  <dd>
-                    {value(progress.remaining, i.decimals)} {symbol}
-                  </dd>
-                </div>
-              )}
-              {progress.excess > 0n && (
-                <div>
-                  <dt>Above invoice amount</dt>
-                  <dd>
-                    {value(progress.excess, i.decimals)} {symbol}
-                  </dd>
-                </div>
-              )}
-              {cumulative && (
-                <div>
-                  <dt>Gross collected</dt>
-                  <dd>
-                    {value(i.collected ?? "0", i.decimals)} {symbol}
-                  </dd>
-                </div>
-              )}
-            </dl>
-            <p>
-              {pendingAccounting &&
-                "A new balance is detected; waiting for server receipt verification. "}
-              {cumulative
-                ? "Confirmed funding and merchant collection are separate. Collection may deduct the merchant-authorized executor reward."
-                : "This offline link shows the current chain balance, not cumulative payment history."}{" "}
-              {progress.excess > 0n
-                ? "Excess funds remain collectable to the merchant; there is no automatic refund."
-                : progress.remaining > 0n && cumulative
-                  ? "Send only the remaining amount to top up this invoice."
-                  : ""}
-            </p>
+        {error && (
+          <div role="alert" className="feedback error">
+            {error}
           </div>
-          <button
-            aria-label="Refresh payment status"
-            disabled={busy}
-            onClick={async () => {
-              setBusy(true);
-              try {
-                if (slug !== "offline") {
-                  const next = await api<Intent & { status: string }>(
-                    `payments/${slug}`,
-                  );
-                  setIntent(
-                    await refresh(n, {
-                      ...i,
-                      received: next.received,
-                      collected: next.collected,
-                      settled: next.settled,
-                    }),
-                  );
-                } else {
-                  setIntent(await refresh(n, i));
-                }
-                setStatusWarning("");
-              } catch (e) {
-                setError(e instanceof Error ? e.message : "Refresh failed.");
-              } finally {
-                setBusy(false);
-              }
-            }}
-          >
-            <RefreshCw size={18} />
-          </button>
-        </div>
+        )}
         {statusWarning && (
           <p className="feedback" role="status">
             {statusWarning}
           </p>
         )}
+        {progress.excess > 0n && (
+          <p className="field-note">
+            {value(progress.excess, i.decimals)} {symbol} above the invoice.
+            Excess funds go to the merchant; no automatic refund.
+          </p>
+        )}
         <p className="checkout-footnote">
-          Payments are non-custodial. Salute cannot reverse a transfer. Contact
-          the merchant about refunds.{" "}
+          Non-custodial payment · Transfers cannot be reversed.
           {slug === "offline"
-            ? "This is an exported offline link; server status and webhooks are unavailable."
-            : "Keep this link to check your payment."}
+            ? " Offline link: cumulative history unavailable."
+            : " Keep this link for your records."}
         </p>
       </section>
       <div className="checkout-footer">
-        <ShieldCheck size={14} />
-        Merchant-signed order · Funds forwarded directly to the merchant
+        <ShieldCheck size={14} /> Merchant-signed order · Fixed destination
       </div>
     </main>
   );

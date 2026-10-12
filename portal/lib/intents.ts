@@ -28,6 +28,7 @@ import {
 } from "./wallet-connectors";
 export { disconnectWallet, walletOptions };
 import evmNetworks from "./evm-networks.json";
+import { rememberWalletConnector, walletConnector } from "./wallet-session";
 export { evmNetworks };
 import {
   Connection,
@@ -73,6 +74,7 @@ export type Network = {
   domain: string;
   feeToken?: string;
   faucet?: string;
+  environment?: string;
 };
 export type Terms = {
   id: string;
@@ -361,7 +363,7 @@ let selectedEvmProvider: InjectedProvider | undefined;
 let useWalletConnect = false;
 const announcedWallets = new Map<
   string,
-  { name: string; provider: InjectedProvider }
+  { name: string; rdns: string; provider: InjectedProvider }
 >();
 export async function wallets() {
   if (typeof window.addEventListener === "function") {
@@ -370,6 +372,7 @@ export async function wallets() {
       if (detail?.info?.uuid && detail?.provider?.request)
         announcedWallets.set(detail.info.uuid, {
           name: String(detail.info.name),
+          rdns: String(detail.info.rdns || ""),
           provider: detail.provider,
         });
     };
@@ -383,6 +386,37 @@ export async function wallets() {
 export function chooseWallet(id: string) {
   selectedEvmProvider = announcedWallets.get(id)?.provider;
   useWalletConnect = id === "walletconnect";
+  rememberWalletConnector("evm", useWalletConnect ? "walletconnect" :
+    selectedEvmProvider ? announcedWallets.get(id)!.rdns : "injected");
+}
+// Restore authorization without requesting accounts, signatures or a network switch.
+export async function restoreWallet(n: Network): Promise<string> {
+  if (n.chain === "solana") {
+    setSolanaChain(n.chainId);
+    const { selectSolana } = await import("./wallet-connectors");
+    const name = walletConnector("solana");
+    if (!name) return "";
+    selectSolana(name);
+    return (await connectSolana(true)).publicKey.toBase58();
+  }
+  if (n.chain === "tron") {
+    const { restoreTron } = await import("./wallet-connectors");
+    return restoreTron();
+  }
+  const connector = walletConnector("evm");
+  useWalletConnect = connector === "walletconnect";
+  let provider: InjectedProvider | undefined;
+  if (useWalletConnect) provider = await walletConnectProvider(n, false);
+  else if (connector === "injected")
+    provider = (window as unknown as { ethereum?: InjectedProvider }).ethereum;
+  else {
+    await wallets();
+    provider = [...announcedWallets.values()].find((w) => w.rdns === connector)?.provider;
+  }
+  if (!provider) return "";
+  selectedEvmProvider = useWalletConnect ? undefined : provider;
+  const accounts = await provider.request({ method: "eth_accounts", params: [] });
+  return Array.isArray(accounts) && typeof accounts[0] === "string" ? getAddress(accounts[0]) : "";
 }
 export function watchEvmWallet(f: (account: string) => void) {
   const provider = ((useWalletConnect

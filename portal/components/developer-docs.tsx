@@ -530,7 +530,7 @@ export default function DeveloperDocs() {
                 {
                   method: "POST",
                   path: "/api/payments",
-                  desc: "Publish exported signed order JSON; authorization and monthly quotas are checked.",
+                  desc: "Publish exported signed order JSON; merchant authorization is checked. Testnet beta has no plan or monthly link limits.",
                 },
                 {
                   method: "GET",
@@ -580,9 +580,9 @@ export default function DeveloperDocs() {
             </p>
             <h3>Hosted or offline links</h3>
             <p>
-              Hosted publication follows your dashboard plan: Free includes
-              Ethereum, Base and Arbitrum; Growth adds the other EVM rails;
-              Scale includes Solana and TRON. In Create payments, disable
+              The testnet beta supports all eight activated networks without
+              dashboard plan or monthly payment-link limits. Pricing applies to
+              the production app. In Create payments, disable
               “Publish a hosted payment link” to use a signed offline link on
               any activated rail without a hosted plan. Export the order as a
               backup. Offline checkout verifies its signature and current chain

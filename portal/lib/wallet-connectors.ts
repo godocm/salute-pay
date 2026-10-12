@@ -4,6 +4,7 @@ import { getWallets } from "@wallet-standard/app";
 import type { Wallet, WalletAccount } from "@wallet-standard/base";
 import type { Network } from "./intents";
 import evmNetworks from "./evm-networks.json";
+import { rememberWalletConnector } from "./wallet-session";
 
 type EipProvider = {
   request(args: {
@@ -44,7 +45,7 @@ function feature<T>(w: Wallet, name: string): T {
   if (!f) throw Error(`Wallet lacks ${name}.`);
   return f as T;
 }
-export async function connectSolana() {
+export async function connectSolana(silent = false) {
   const candidates = getWallets()
     .get()
     .filter(
@@ -53,18 +54,19 @@ export async function connectSolana() {
         w.features["solana:signMessage"] &&
         w.features["solana:signTransaction"],
     );
-  sol = sol || candidates.find((w) => w.name === solName) || candidates[0];
+  sol = sol || candidates.find((w) => w.name === solName) || (!silent ? candidates[0] : undefined);
   if (!sol)
     throw Error(
       "Open this page in Phantom/Solflare, or install a Solana Wallet Standard wallet.",
     );
   const result = await feature<{
-    connect: () => Promise<{ accounts: WalletAccount[] }>;
-  }>(sol, "standard:connect").connect();
+    connect: (input?: { silent: boolean }) => Promise<{ accounts: WalletAccount[] }>;
+  }>(sol, "standard:connect").connect(silent ? { silent: true } : undefined);
   solAccount = result.accounts.find((a) =>
     a.chains.some((c) => c.startsWith("solana:")),
   );
   if (!solAccount) throw Error("No Solana account was authorized.");
+  rememberWalletConnector("solana", sol.name);
   return currentSolana();
 }
 export function currentSolana() {
@@ -129,7 +131,7 @@ export async function connectTron(chainId: string) {
     await tron.switchChain("0x" + BigInt(chainId).toString(16));
   return tron.address!;
 }
-export async function walletConnectProvider(n: Network): Promise<EipProvider> {
+export async function walletConnectProvider(n: Network, allowNewSession = true): Promise<EipProvider> {
   const projectId = process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID;
   if (!projectId)
     throw Error(
@@ -165,11 +167,25 @@ export async function walletConnectProvider(n: Network): Promise<EipProvider> {
     session?: unknown;
     connect: () => Promise<unknown>;
   };
-  if (!provider.session) await provider.connect();
+  if (!provider.session) {
+    if (!allowNewSession) throw Error("No existing WalletConnect session.");
+    await provider.connect();
+  }
   return wc;
 }
 export function activeWalletConnectProvider() {
   return wc;
+}
+export async function restoreTron() {
+  const injected = (window as unknown as { tronWeb?: { ready?: boolean; defaultAddress?: { base58?: string } } }).tronWeb;
+  if (!injected?.ready || !injected.defaultAddress?.base58) return "";
+  if (!tron) {
+    const { TronLinkAdapter } = await import("@tronweb3/tronwallet-adapter-tronlink");
+    tron = new TronLinkAdapter({ dappName: "Salute Pay", dappIcon: `${location.origin}/favicon.svg` });
+  }
+  // network() checks the already authorized adapter without connecting or switching.
+  await tron.network();
+  return tron.address || "";
 }
 export function watchWalletAccounts(chain: string, changed: (account: string) => void) {
   if (chain === "solana" && sol) {

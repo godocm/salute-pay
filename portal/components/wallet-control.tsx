@@ -64,11 +64,11 @@ export function WalletControl({
     try {
       if (account) {
         await disconnectWallet();
+        onAccount("");
         await fetch("/api/auth/logout", {
           method: "POST",
           headers: { "content-type": "application/json" },
         });
-        onAccount("");
       } else {
         if (isEvm(network.chain)) chooseWallet(selected);
         else if (network.chain === "solana") selectSolana(selected);

@@ -338,13 +338,22 @@ try {
   assert.equal(results.filter((r) => r.status === 201).length, remaining);
   assert.equal(results.filter((r) => r.status === 403).length, 2);
   assert.equal((await ok("me")).linksThisMonth, 20);
+  // Trusted testnet metadata removes the quota for the same free merchant.
+  const betaNetworks = JSON.parse(process.env.SALUTE_NETWORKS_JSON);
+  for (const network of Object.values(betaNetworks.networks)) network.environment = "testnet";
+  process.env.SALUTE_NETWORKS_JSON = JSON.stringify(betaNetworks);
+  await database().query("DELETE FROM salute_rate_limits");
+  const betaOrders = await Promise.all(Array.from({ length: 22 }, () => signed()));
+  const betaResults = await Promise.all(betaOrders.map((order) => request("payments", "POST", order)));
+  assert.equal(betaResults.filter((r) => r.status === 201).length, 22);
+  assert.equal((await ok("me")).linksThisMonth, 42);
   assert.equal((await request("jobs")).status, 401);
   const authorized = await request("jobs", "GET", undefined, {
     headers: { authorization: "Bearer local-test-jobs-only" },
   });
   assert.equal(authorized.status, 200);
   console.log(
-    "PASS platform PostgreSQL integration: wallet sessions/replay/ownership, signed publisher, shared links, concurrent quotas, chain-verified under/over/late/cross-chain receipts, signed webhooks, job authorization and SSRF guards",
+    "PASS platform PostgreSQL integration: wallet sessions/replay/ownership, signed publisher, shared links, concurrent production quotas and unrestricted beta publication, chain-verified under/over/late/cross-chain receipts, signed webhooks, job authorization and SSRF guards",
   );
   await database().end();
 } finally {

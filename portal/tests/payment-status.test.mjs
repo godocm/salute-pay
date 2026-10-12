@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { fundingStatus, fundingProgress, cumulativeReceived, fundingView } from "../lib/payment-status.ts";
-import { planAllowsNetwork } from "../lib/plans.ts";
+import { isBetaNetwork, planAllowsNetwork, planPaymentLimit } from "../lib/plans.ts";
 
 test("invoice funding distinguishes partial, exact, excess and cumulative late deposits", () => {
   assert.equal(fundingStatus("0", "100"), "awaiting");
@@ -32,6 +32,22 @@ test("dashboard tiers allow all six EVM rails at Growth and require Scale for So
     assert.equal(planAllowsNetwork("scale", chain), true);
   }
   assert.equal(planAllowsNetwork("scale", "unknown"), false);
+});
+test("testnet beta opens all eight networks and removes quotas without changing production plans", () => {
+  const ids = { ethereum: "11155111", base: "84532", arbitrum: "421614", tempo: "42431", bnb: "97", robinhood: "46630", solana: "devnet", tron: "3448148188" };
+  for (const [chain, chainId] of Object.entries(ids)) {
+    const beta = isBetaNetwork({ chain, chainId, environment: "testnet" });
+    assert.equal(beta, true);
+    assert.equal(planAllowsNetwork("free", chain, beta), true);
+  }
+  assert.equal(planPaymentLimit("free", true), Infinity);
+  assert.equal(planPaymentLimit("growth", true), Infinity);
+  assert.equal(planPaymentLimit("free"), 20);
+  assert.equal(planPaymentLimit("growth"), 1000);
+  assert.equal(isBetaNetwork({ chain: "ethereum", chainId: "1", environment: "testnet" }), false);
+  assert.equal(isBetaNetwork({ chain: "tempo", chainId: "42431", environment: "mainnet" }), false);
+  assert.equal(isBetaNetwork({ chain: "tempo", chainId: "42431" }), false);
+  assert.equal(planAllowsNetwork("free", "unknown", true), false);
 });
 
 

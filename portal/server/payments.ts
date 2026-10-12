@@ -23,7 +23,7 @@ import { networks } from "./networks";
 import { transaction, database } from "./db";
 import { random, HttpError } from "./security";
 import { identity } from "./auth";
-import { planAllowsNetwork, planNetworkMessage } from "../lib/plans";
+import { isBetaNetwork, planAllowsNetwork, planNetworkMessage, planPaymentLimit } from "../lib/plans";
 export async function verifyPayment(raw: unknown): Promise<Payment> {
   const parsed = paymentSchema.safeParse(raw);
   if (!parsed.success) throw new HttpError(400, "Invalid signed payment data.");
@@ -179,18 +179,17 @@ export async function publish(raw: unknown, merchant: { id: string }) {
       key,
     ]);
     if (existing) return paymentView(existing);
-    if (!planAllowsNetwork(m.plan, i.network.chain))
+    const beta = isBetaNetwork(networks()[i.network.chain]);
+    if (!planAllowsNetwork(m.plan, i.network.chain, beta))
       throw new HttpError(403, planNetworkMessage(i.network.chain));
-    const {
-      rows: [usage],
-    } = await c.query(
-      "SELECT count(*)::int n FROM salute_payments WHERE merchant_id=$1 AND created_at>=date_trunc('month',now())",
-      [m.id],
-    );
-    const limit =
-      m.plan === "free" ? 20 : m.plan === "growth" ? 1000 : Infinity;
-    if (usage.n >= limit)
-      throw new HttpError(403, "Monthly payment-link limit reached.");
+    if (!beta) {
+      const { rows: [usage] } = await c.query(
+        "SELECT count(*)::int n FROM salute_payments WHERE merchant_id=$1 AND created_at>=date_trunc('month',now())",
+        [m.id],
+      );
+      if (usage.n >= planPaymentLimit(m.plan))
+        throw new HttpError(403, "Monthly payment-link limit reached.");
+    }
     const slug = random(),
       webhook = Boolean(i.webhookEnabled && m.webhook_url);
     i.createdAt = new Date().toISOString();

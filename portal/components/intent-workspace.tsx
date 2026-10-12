@@ -1,5 +1,5 @@
 "use client";
-import { planAllowsNetwork, planNetworkMessage } from "../lib/plans";
+import { isBetaNetwork, planAllowsNetwork, planNetworkMessage } from "../lib/plans";
 import { executionPreview, afterConfirmation, collectionStatus } from "../lib/execution";
 import { cumulativeReceived, fundingProgress, fundingView } from "../lib/payment-status";
 import { useEffect, useRef, useState } from "react";
@@ -19,6 +19,8 @@ import {
   Settings2,
   ArrowRight,
 } from "lucide-react";
+import { IntentHistory } from "./intent-history";
+import { IntentDialog } from "./intent-dialog";
 import { AppShell } from "./app-shell";
 import { ChainLogo } from "./brand";
 import { WalletControl } from "./wallet-control";
@@ -81,7 +83,7 @@ export default function Workspace({
 }: {
   mode?: "merchant" | "executor" | "developer";
 }) {
-  const { chain, setChain, account, setAccount } = useWorkspaceWallet();
+  const { chain, setChain, account, setAccount, restoring } = useWorkspaceWallet();
   const [configs, setConfigs] = useState<Record<Chain, Network>>(defaults),
     [ready, setReady] = useState<Set<string>>(new Set()),
     [db, setDb] = useState(false),
@@ -97,8 +99,6 @@ export default function Workspace({
     [webhook, setWebhook] = useState(false),
     [listing, setListing] = useState(true),
     [hosted, setHosted] = useState(true),
-    [fundedOnly, setFundedOnly] = useState(mode === "executor"),
-    [search, setSearch] = useState(""),
     [queueCheckedAt, setQueueCheckedAt] = useState(""),
     [queueWarning, setQueueWarning] = useState(""),
     [refreshing, setRefreshing] = useState(false),
@@ -117,7 +117,6 @@ export default function Workspace({
     [recoveryQuote, setRecoveryQuote] = useState("");
   const lock = useRef(false),
     loadGeneration = useRef(0),
-    detail = useRef<HTMLElement>(null),
     selection = useRef(selected),
     refreshingQueue = useRef(false),
     queuedLoad = useRef<(() => Promise<void>) | null>(null),
@@ -273,7 +272,7 @@ export default function Workspace({
         );
       if (db && hosted) {
         const m = await signedIn();
-        if (!planAllowsNetwork(m.plan, chain))
+        if (!planAllowsNetwork(m.plan, chain, isBetaNetwork(n)))
           throw Error(planNetworkMessage(chain));
       }
       let i = await create(n, reference, amount, reward, native);
@@ -313,6 +312,10 @@ export default function Workspace({
     });
   }
   async function choose(i: Intent) {
+    if (lock.current) return;
+    setSelected(i);
+    setWaive(false);
+    setReview(false);
     loadGeneration.current++;
     await run("Verifying payment", async () => {
       const current = await refresh(configFor(i, configs), i);
@@ -323,12 +326,7 @@ export default function Workspace({
       );
       setWaive(false);
       setReview(false);
-      detail.current?.scrollIntoView({
-        behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-          ? "auto"
-          : "smooth",
-        block: "start",
-      });
+
     });
   }
   async function settle() {
@@ -420,12 +418,6 @@ export default function Workspace({
     balance = preview?.balance ?? 0n,
     canSettle = Boolean(
       i && preview?.collectible && account && chain === i.network.chain,
-    ),
-    visibleOrders = orders.filter(
-      (order) =>
-        order.network.chain === chain &&
-        (!fundedOnly || BigInt(order.balance) > 0n) &&
-        (!search || `${order.reference} ${order.address} ${order.terms.merchant} ${order.asset}`.toLowerCase().includes(search.toLowerCase())),
     );
   return (
     <AppShell active={mode}>
@@ -452,7 +444,7 @@ export default function Workspace({
           </div>
           <WalletControl
             network={n}
-            disabled={!!busy}
+            disabled={!!busy || restoring}
             account={account}
             onAccount={(a) => {
               setAccount(a);
@@ -472,7 +464,7 @@ export default function Workspace({
               key={c}
               className={`chain-card ${chain === c ? "selected" : ""}`}
               aria-pressed={chain === c}
-              disabled={!!busy}
+              disabled={!!busy || restoring}
               onClick={() => setChain(c as Chain)}
             >
               <span className={`chain-mark ${c}`}>
@@ -587,11 +579,6 @@ export default function Workspace({
           <section className="card developer-card">
             <span className="eyebrow">DEVELOPER SETTINGS</span>
             <h2>Webhook destination</h2>
-            <p>
-              Sign in with your merchant wallet to set a public HTTPS endpoint.
-              Choose “Send webhook events” for each hosted payment you want to
-              notify. Saving an endpoint does not enable delivery automatically.
-            </p>
             <button
               className="button secondary"
               disabled={!account || !!busy || !db}
@@ -650,28 +637,12 @@ export default function Workspace({
                   Copy secret
                 </button>
                 <p>
-                  Your plan: <b>{me.plan}</b> · {me.linksThisMonth} links
-                  created this month. Plan changes require verified billing by
-                  the operator.
+                  {isBetaNetwork(n) ? "Beta · All testnets · No payment-link limit" : <>Your plan: <b>{me.plan}</b></>}
                 </p>
               </>
             )}
-            <h3>Test with Webhook.site</h3>
-            <ol>
-              <li>Open <a href="https://webhook.site" target="_blank" rel="noreferrer">webhook.site</a> and copy “Your unique URL”.</li>
-              <li>Paste the HTTPS URL above and save the endpoint.</li>
-              <li>Create a hosted payment with “Send webhook events” checked.</li>
-              <li>Watch Webhook.site for payment.created. Fund and collect with test assets to see verified payment events after the scheduled watcher runs.</li>
-            </ol>
-            <p>
-              No secret is needed to inspect requests on Webhook.site. Salute’s
-              signing secret lets your own server verify the salute-signature
-              header before processing events; it is not a Webhook.site API key.
-              Delivery uses your saved endpoint at each attempt, including retries.
-              Changing the URL does not enable events for existing payments.
-            </p>
             <Link className="button secondary" href="/docs#webhooks">
-              Read API and webhook docs <ArrowUpRight size={16} />
+              Webhook documentation <ArrowUpRight size={16} />
             </Link>
           </section>
         ) : (
@@ -686,8 +657,8 @@ export default function Workspace({
                   </span>
                   <h2>
                     {mode === "executor"
-                      ? "Execution queue"
-                      : "Payment activity"}
+                      ? "Intent history"
+                      : "Payment history"}
                   </h2>
                 </div>
                 <button
@@ -706,20 +677,10 @@ export default function Workspace({
                     <div><strong>{orders.filter((o) => o.network.chain === chain && o.verifiedAt && collectionStatus(o).status === "ready").length}</strong><span>Ready to execute</span></div>
                     <div><strong>{orders.filter((o) => o.network.chain === chain && collectionStatus(o).status === "sponsor").length}</strong><span>Need sponsorship</span></div>
                   </div>
-                  <div className="queue-toolbar">
-                    <label className="queue-search">Search intents
-                      <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Reference, address or asset" />
-                    </label>
-                    <label className="check queue-filter">
-                      <input type="checkbox" checked={fundedOnly} onChange={(e) => setFundedOnly(e.target.checked)} />
-                      Funded only
-                    </label>
-                  </div>
                   <p className="queue-freshness" role="status">
                     {refreshing ? "Checking chain balances…" : queueCheckedAt ? `Last refreshed ${new Date(queueCheckedAt).toLocaleTimeString()} · Auto-refresh every 20s` : "Loading execution queue…"}
                   </p>
                   {queueWarning && <p className="queue-warning" role="status">{queueWarning}</p>}
-                  <div className="queue-columns" aria-hidden="true"><span>Intent / network</span><span>Invoice / available</span><span>Funding / execution</span><span /></div>
                 </>
               )}
               {db && mode === "merchant" && !me && (
@@ -736,60 +697,7 @@ export default function Workspace({
                   Sign in to load your published links
                 </button>
               )}
-              <div className="order-list">
-                {visibleOrders.length === 0 ? (
-                  <div className="empty-state">
-                    <Link2 size={32} />
-                    <h3>
-                      {mode === "executor"
-                        ? search ? "No matching intents" : refreshing ? "Checking intents…" : `No ${fundedOnly ? "funded " : ""}orders on ${names[chain]} yet`
-                        : "Your next payment starts here"}
-                    </h3>
-                    <p>
-                      {mode === "executor"
-                        ? search ? "Try another reference, address or asset." : "Import a signed order, or wait for a merchant to publish one."
-                        : "Connect your wallet and create a payment link."}
-                    </p>
-                  </div>
-                ) : (
-                  visibleOrders.map((o) => (
-                    <button
-                      aria-pressed={Boolean(i && intentKey(i) === intentKey(o))}
-                      className={`order-row ${i && intentKey(i) === intentKey(o) ? "active" : ""}`}
-                      key={intentKey(o)}
-                      disabled={!!busy}
-                      onClick={() => choose(o)}
-                    >
-                      <div>
-                        <b>{o.reference}</b>
-                        <small>
-                          {names[o.network.chain]} · {short(o.address)}
-                        </small>
-                      </div>
-                      <div>
-                        <b>
-                          {value(o.terms.amount, o.decimals)} {o.asset}
-                        </b>
-                        <small>
-                          {value(o.balance, o.decimals)} {o.asset} available
-                        </small>
-                        <small>
-                          {value(o.terms.executorFee, o.decimals)} {o.asset} reward / sweep
-                        </small>
-                      </div>
-                      {mode === "executor" ? (
-                        <div className="queue-statuses">
-                          <span className={`status ${fundingView(o, o.terms.amount).status}`}>
-                            {fundingView(o, o.terms.amount).label}
-                          </span>
-                          <small className={`execution-state ${collectionStatus(o).status}`}>{o.verifiedAt ? collectionStatus(o).label : "Chain check unavailable"}</small>
-                        </div>
-                      ) : <span className={`status ${state(o)}`}>{state(o)}</span>}
-                      <ArrowRight size={16} />
-                    </button>
-                  ))
-                )}
-              </div>
+              <IntentHistory orders={orders} chain={chain} executor={mode === "executor"} busy={!!busy} onOpen={choose} />
               <details className="import-box">
                 <summary>Import signed order / payment link</summary>
                 <textarea
@@ -843,7 +751,9 @@ export default function Workspace({
                     </label>
                     <p className="field-note">
                       {hosted
-                        ? "Hosted links include shared status and optional webhooks. Free supports Ethereum, Base and Arbitrum; other rails require an operator-activated plan."
+                        ? isBetaNetwork(n)
+                          ? "Hosted links include shared status and optional webhooks. All testnets are available without payment-link limits during beta."
+                          : "Hosted links include shared status and optional webhooks. Mainnet access follows your dashboard plan."
                         : "Signed offline links work on every activated rail without a dashboard plan. Export a backup; cumulative history, public discovery and webhooks are unavailable."}
                     </p>
                   </>
@@ -991,7 +901,8 @@ export default function Workspace({
           </div>
         )}
         {i && mode !== "developer" && (
-          <section className="card payment-detail" ref={detail}>
+          <IntentDialog busy={!!busy} onClose={() => { setSelected(null); setReview(false); }}>
+          <section className="card payment-detail">
             <div className="card-title">
               <div>
                 <span className="eyebrow">SIGNED PAYMENT · {names[i.network.chain]}</span>
@@ -1094,6 +1005,21 @@ export default function Workspace({
                   Sponsor SOL address setup for tiny deposits
                 </button>
               )}
+            <div className="intent-wallet">
+              <span className="eyebrow">SETTLEMENT WALLET · {names[i.network.chain]}</span>
+              <WalletControl
+                network={configFor(i, configs)}
+                account={chain === i.network.chain ? account : ""}
+                disabled={!!busy || restoring}
+                onAccount={(a) => {
+                  setChain(i.network.chain);
+                  setAccount(a);
+                  setReview(false);
+                  if (!a) setMe(null);
+                }}
+                onError={setError}
+              />
+            </div>
             <label className="check">
               <input
                 type="checkbox"
@@ -1276,6 +1202,9 @@ export default function Workspace({
                 </button>
               </details>
             )}
+            <details className="signed-intent-data"><summary>Full signed intent data</summary><pre>{JSON.stringify(i, null, 2)}</pre></details>
+            {error && <div className="feedback error" role="alert">{error}</div>}
+            {notice && <div className="feedback" role="status">{notice}</div>}
             {i.receipts?.map((r) => (
               <div className="receipt" key={`${r.hash}:${r.status}`}>
                 <span>
@@ -1305,6 +1234,7 @@ export default function Workspace({
               </div>
             ))}
           </section>
+          </IntentDialog>
         )}
         <section className="flow-strip">
           <div>

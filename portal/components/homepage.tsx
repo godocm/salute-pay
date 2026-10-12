@@ -263,9 +263,9 @@ export default function Homepage() {
               Open protocol access.
             </h2>
             <p>
-              Infrastructure starts at $0. All EVM rails from $49/month.
+              Testnet beta: all eight networks and unlimited payment links.
               <br />
-              Network costs and executor rewards are separate.
+              Plans apply to the production app. Network costs and executor rewards are separate.
             </p>
             <a href="/pricing.html" className="m-button m-secondary">
               Explore plans <ArrowUpRight size={17} />
