@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-12T21:12:36.714Z",
+  "chain": "tempo",
+  "status": "passed",
+  "checks": [
+    "same app wallet connector/client paths",
+    "merchant EIP-712 signing",
+    "separate checkout-link verification",
+    "public merchant mint button call",
+    "underpayment",
+    "overpayment",
+    "executor reward",
+    "receipt confirmation with live mixed Tempo transactions"
+  ],
+  "transactions": [
+    "0xff69aa135b5d40f924aa0c8a5e64f3b536f5e80487f433debff01176668009a5",
+    "0x1212039597246ce0db7eeb0cd7691d49be8ca6829cc3d69979da49d0a95e39e3",
+    "0xb3c1e29ed814758ef5283d72dad8c5b82b72aebc99f3d2c842c95d8750b01da0",
+    "0xabca96516780274aede5db461a8096edbc7048dd31cd1cfdfd527f5b2e30252a",
+    "0xa9cf1b26f88928d5883125a3f0182c5cf20faeb96a2db6e3908b9882d91b58bb"
+  ]
+}

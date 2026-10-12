@@ -1,6 +1,7 @@
 "use client";
 import { planAllowsNetwork, planNetworkMessage } from "../lib/plans";
-import { executionPreview, afterConfirmation } from "../lib/execution";
+import { executionPreview, afterConfirmation, collectionStatus } from "../lib/execution";
+import { cumulativeReceived, fundingProgress, fundingLabels } from "../lib/payment-status";
 import { useEffect, useRef, useState } from "react";
 import {
   ArrowUpRight,
@@ -95,6 +96,10 @@ export default function Workspace({
     [listing, setListing] = useState(true),
     [hosted, setHosted] = useState(true),
     [fundedOnly, setFundedOnly] = useState(mode === "executor"),
+    [search, setSearch] = useState(""),
+    [queueCheckedAt, setQueueCheckedAt] = useState(""),
+    [queueWarning, setQueueWarning] = useState(""),
+    [refreshing, setRefreshing] = useState(false),
     [webhookUrl, setWebhookUrl] = useState(""),
     [busy, setBusy] = useState(""),
     [error, setError] = useState(""),
@@ -111,10 +116,15 @@ export default function Workspace({
   const lock = useRef(false),
     loadGeneration = useRef(0),
     detail = useRef<HTMLElement>(null),
+    selection = useRef(selected),
+    refreshingQueue = useRef(false),
+    queuedLoad = useRef<(() => Promise<void>) | null>(null),
     n = { ...configs[chain], token: token || configs[chain].token };
+  selection.current = selected;
   async function run(label: string, fn: () => Promise<void>) {
     if (lock.current) return;
     lock.current = true;
+    loadGeneration.current++;
     setBusy(label);
     setError("");
     setNotice("");
@@ -128,28 +138,68 @@ export default function Workspace({
     }
   }
   async function load() {
+    if (refreshingQueue.current) {
+      queuedLoad.current = load;
+      return;
+    }
+    refreshingQueue.current = true;
+    setRefreshing(true);
     const generation = ++loadGeneration.current;
-    if (db) {
-      const result = await api<{ payments: Intent[] }>(
-        mode === "executor" ? "public-orders" : "payments",
-      );
+    try {
       const local = saved();
+      let rows = local;
+      if (db) {
+        const result = await api<{ payments: Intent[] }>(
+          mode === "executor" ? "public-orders" : "payments",
+        );
+        rows = [
+          ...result.payments.map((order) => {
+            const existing = local.find((row) => intentKey(row) === intentKey(order));
+            return {
+              ...order,
+              receipts: existing?.receipts || order.receipts,
+            };
+          }),
+          ...local.filter((row) => !result.payments.some((order) => intentKey(row) === intentKey(order))),
+        ];
+      }
+      let failures = 0;
+      if (mode === "executor") {
+        // Bound concurrent RPC calls, including awaiting orders so first deposits appear.
+        const active = rows.filter((row) => row.network.chain === chain);
+        const checked = new Map<string, Intent>();
+        for (let offset = 0; offset < active.length; offset += 4) {
+          const batch = active.slice(offset, offset + 4);
+          const results = await Promise.allSettled(batch.map((row) => refresh(configFor(row, configs), row, false)));
+          if (generation !== loadGeneration.current) return;
+          results.forEach((result, index) => {
+            if (result.status === "fulfilled") checked.set(intentKey(batch[index]), result.value);
+            else {
+              failures++;
+              checked.set(intentKey(batch[index]), { ...batch[index], verifiedAt: undefined });
+            }
+          });
+        }
+        rows = rows.map((row) => checked.get(intentKey(row)) ?? row);
+      }
       if (generation !== loadGeneration.current) return;
-      setOrders([
-        ...result.payments.map((order) => {
-          const existing = local.find(
-            (row) => intentKey(row) === intentKey(order),
-          );
-          return { ...order, receipts: existing?.receipts || order.receipts };
-        }),
-        ...local.filter(
-          (row) =>
-            !result.payments.some(
-              (order) => intentKey(row) === intentKey(order),
-            ),
-        ),
-      ]);
-    } else setOrders(saved());
+      if (mode === "executor") rows.filter((row) => row.network.chain === chain).forEach(store);
+      setOrders(rows);
+      const opened = selection.current;
+      const current = opened && rows.find((row) => intentKey(row) === intentKey(opened));
+      if (current && current.network.chain === chain) {
+        if (current.balance !== opened.balance) setReview(false);
+        setSelected(current);
+      }
+      setQueueCheckedAt(new Date().toISOString());
+      setQueueWarning(failures ? `${failures} intent${failures === 1 ? "" : "s"} could not be checked. Displayed balances may be stale; refresh before executing.` : "");
+    } finally {
+      refreshingQueue.current = false;
+      setRefreshing(false);
+      const next = queuedLoad.current;
+      queuedLoad.current = null;
+      if (next && !lock.current) next().catch((e) => setQueueWarning(e.message));
+    }
   }
   useEffect(() => {
     const requested = new URLSearchParams(window.location.search).get("chain");
@@ -182,17 +232,25 @@ export default function Workspace({
     loadGeneration.current++;
   }, [chain, configs]);
   useEffect(() => {
-    if (db && (mode === "executor" || me))
+    if (configLoaded && (mode === "executor" || (db && me)))
       load().catch((e) => setError(e.message));
-  }, [db, mode, me]);
+  }, [configLoaded, db, mode, me, chain, configs]);
   useEffect(() => {
-    if (!db || mode !== "executor") return;
+    if (!configLoaded || mode !== "executor") return;
     const timer = setInterval(() => {
       if (!lock.current && document.visibilityState === "visible")
-        load().catch((e) => setError(e.message));
+        load().catch((e) => setQueueWarning(e.message));
     }, 20000);
-    return () => clearInterval(timer);
-  }, [db, mode]);
+    const onVisible = () => {
+      if (document.visibilityState === "visible" && !lock.current)
+        load().catch((e) => setQueueWarning(e.message));
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => {
+      clearInterval(timer);
+      document.removeEventListener("visibilitychange", onVisible);
+    };
+  }, [configLoaded, db, mode, chain, configs]);
   async function signedIn() {
     const m = await login(n);
     setMe(m);
@@ -248,6 +306,7 @@ export default function Workspace({
     });
   }
   async function choose(i: Intent) {
+    loadGeneration.current++;
     await run("Verifying payment", async () => {
       const current = await refresh(configFor(i, configs), i);
       setChain(i.network.chain);
@@ -313,6 +372,7 @@ export default function Workspace({
       const confirmed: Intent = {
         ...latest,
         balance: "0",
+        collected: String(BigInt(latest.collected ?? "0") + BigInt(latest.balance)),
         settled: true,
         verifiedAt: undefined,
         receipts: [
@@ -357,7 +417,8 @@ export default function Workspace({
     visibleOrders = orders.filter(
       (order) =>
         order.network.chain === chain &&
-        (!fundedOnly || BigInt(order.balance) > 0n),
+        (!fundedOnly || BigInt(order.balance) > 0n) &&
+        (!search || `${order.reference} ${order.address} ${order.terms.merchant} ${order.asset}`.toLowerCase().includes(search.toLowerCase())),
     );
   return (
     <AppShell active={mode}>
@@ -387,7 +448,6 @@ export default function Workspace({
             disabled={!!busy}
             account={account}
             onAccount={(a) => {
-              loadGeneration.current++;
               setAccount(a);
               setReview(false);
               if (!a) setMe(null);
@@ -594,13 +654,13 @@ export default function Workspace({
             </a>
           </section>
         ) : (
-          <div className="workspace-grid">
+          <div className={`workspace-grid ${mode === "executor" ? "executor-workspace" : ""}`}>
             <section className="card list-card">
               <div className="card-title">
                 <div>
                   <span className="eyebrow">
                     {mode === "executor"
-                      ? "PUBLIC INTENT PUBLISHER"
+                      ? "PERMISSIONLESS SETTLEMENT"
                       : "YOUR PAYMENT LINKS"}
                   </span>
                   <h2>
@@ -612,21 +672,34 @@ export default function Workspace({
                 <button
                   className="icon-button"
                   aria-label="Refresh payments"
-                  disabled={!!busy}
+                  disabled={!!busy || refreshing}
                   onClick={() => run("Refreshing payments", load)}
                 >
                   <RefreshCw size={17} />
                 </button>
               </div>
               {mode === "executor" && (
-                <label className="check queue-filter">
-                  <input
-                    type="checkbox"
-                    checked={fundedOnly}
-                    onChange={(e) => setFundedOnly(e.target.checked)}
-                  />
-                  Show funded orders only
-                </label>
+                <>
+                  <div className="queue-summary">
+                    <div><strong>{orders.filter((o) => o.network.chain === chain && BigInt(o.balance) > 0n).length}</strong><span>Funded intents</span></div>
+                    <div><strong>{orders.filter((o) => o.network.chain === chain && collectionStatus(o).status === "ready").length}</strong><span>Ready to execute</span></div>
+                    <div><strong>{orders.filter((o) => o.network.chain === chain && collectionStatus(o).status === "sponsor").length}</strong><span>Need sponsorship</span></div>
+                  </div>
+                  <div className="queue-toolbar">
+                    <label className="queue-search">Search intents
+                      <input type="search" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Reference, address or asset" />
+                    </label>
+                    <label className="check queue-filter">
+                      <input type="checkbox" checked={fundedOnly} onChange={(e) => setFundedOnly(e.target.checked)} />
+                      Funded only
+                    </label>
+                  </div>
+                  <p className="queue-freshness" role="status">
+                    {refreshing ? "Checking chain balances…" : queueCheckedAt ? `Last refreshed ${new Date(queueCheckedAt).toLocaleTimeString()} · Auto-refresh every 20s` : "Loading execution queue…"}
+                  </p>
+                  {queueWarning && <p className="queue-warning" role="status">{queueWarning}</p>}
+                  <div className="queue-columns" aria-hidden="true"><span>Intent / network</span><span>Invoice / available</span><span>Funding / execution</span><span /></div>
+                </>
               )}
               {db && mode === "merchant" && !me && (
                 <button
@@ -660,6 +733,7 @@ export default function Workspace({
                 ) : (
                   visibleOrders.map((o) => (
                     <button
+                      aria-pressed={Boolean(i && intentKey(i) === intentKey(o))}
                       className={`order-row ${i && intentKey(i) === intentKey(o) ? "active" : ""}`}
                       key={intentKey(o)}
                       disabled={!!busy}
@@ -676,11 +750,20 @@ export default function Workspace({
                           {value(o.terms.amount, o.decimals)} {o.asset}
                         </b>
                         <small>
-                          {value(o.balance, o.decimals)} {o.asset} available ·{" "}
-                          {value(o.terms.executorFee, o.decimals)} reward
+                          {value(o.balance, o.decimals)} {o.asset} available
+                        </small>
+                        <small>
+                          {value(o.terms.executorFee, o.decimals)} {o.asset} reward / sweep
                         </small>
                       </div>
-                      <span className={`status ${state(o)}`}>{state(o)}</span>
+                      {mode === "executor" ? (
+                        <div className="queue-statuses">
+                          <span className={`status ${fundingProgress(cumulativeReceived(o), o.terms.amount).status}`}>
+                            {fundingLabels[fundingProgress(cumulativeReceived(o), o.terms.amount).status]}
+                          </span>
+                          <small className={`execution-state ${collectionStatus(o).status}`}>{collectionStatus(o).label}</small>
+                        </div>
+                      ) : <span className={`status ${state(o)}`}>{state(o)}</span>}
                       <ArrowRight size={16} />
                     </button>
                   ))
@@ -877,8 +960,8 @@ export default function Workspace({
                   </li>
                 </ol>
                 <p className="field-note">
-                  The queue refreshes every 20 seconds while visible. Balances
-                  are indexed snapshots; opening an order checks the chain. A
+                  The queue checks this network every 20 seconds while visible.
+                  Underpaid and overpaid intents can both be executed. A
                   reward is gross revenue, not guaranteed profit after network
                   costs.
                 </p>
@@ -890,7 +973,11 @@ export default function Workspace({
           <section className="card payment-detail" ref={detail}>
             <div className="card-title">
               <div>
-                <span className="eyebrow">SIGNED PAYMENT</span>
+                <span className="eyebrow">SIGNED PAYMENT · {names[i.network.chain]}</span>
+                <div className="detail-statuses">
+                  <span className={`status ${fundingProgress(cumulativeReceived(i), i.terms.amount).status}`}>{fundingLabels[fundingProgress(cumulativeReceived(i), i.terms.amount).status]}</span>
+                  <span className={`status ${collectionStatus(i).status}`}>{collectionStatus(i).label}</span>
+                </div>
                 <h2>{i.reference}</h2>
               </div>
               <div className="inline-actions">
@@ -923,12 +1010,21 @@ export default function Workspace({
                 </a>
               </div>
             </div>
-            <div className="detail-grid">
+            <div className="detail-grid funding-detail-grid">
               <div>
                 <span>Invoice amount</span>
                 <strong>
                   {value(i.terms.amount, i.decimals)} {i.asset}
                 </strong>
+              </div>
+              <div>
+                <span>{i.received !== undefined ? "Total received" : "Observed balance"}</span>
+                <strong>{value(cumulativeReceived(i), i.decimals)} {i.asset}</strong>
+                <small>{fundingProgress(cumulativeReceived(i), i.terms.amount).remaining > 0n
+                  ? `${value(fundingProgress(cumulativeReceived(i), i.terms.amount).remaining, i.decimals)} ${i.asset} under invoice`
+                  : fundingProgress(cumulativeReceived(i), i.terms.amount).excess > 0n
+                    ? `${value(fundingProgress(cumulativeReceived(i), i.terms.amount).excess, i.decimals)} ${i.asset} over invoice`
+                    : "Invoice amount received"}</small>
               </div>
               <div>
                 <span>Available to collect</span>
@@ -944,7 +1040,8 @@ export default function Workspace({
             <p className="field-note">
               Underpayments and overpayments are collectable. Invoice completion
               is based on cumulative confirmed receipts; a previous sweep does
-              not prevent later deposits.
+              not prevent later deposits. Offline orders show current balance
+              only and cannot establish cumulative invoice completion.
             </p>
             <p className="field-note">
               <b>

@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-12T21:17:24.846Z",
+  "chain": "ethereum",
+  "status": "failed",
+  "reason": "Confirmation timeout. Transaction remains pending; check its receipt before retrying.",
+  "transactions": [
+    "0x5bda15b2dff2f653760f2bfe58a6de487fae47385f0095f67d5c6101fb329e14",
+    "0x8567576486daa84362a6ffb01b26ea192953b91857f7e06beb1ef67339580f65",
+    "0xd09b2ee0fd007d67a3624c95b9545be78e24d49c0b16b1366c8c753d34059d91",
+    "0x17dd50e67c9b00d58329b5d3dc54d22561880b36f031a81058d7df6363dd2021"
+  ]
+}

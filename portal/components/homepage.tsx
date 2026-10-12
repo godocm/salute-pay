@@ -114,56 +114,61 @@ export default function Homepage() {
         <section className="difference-section">
           <div className="section-width">
             <Reveal className="difference-heading">
-              <span className="m-eyebrow">WHAT CHANGES WITH SALUTE</span>
+              <span className="m-eyebrow">CONTROL BUILT INTO EVERY PAYMENT</span>
               <h2>
-                Payment infrastructure.
+                Your funds. Your terms.
                 <br />
-                <em>Without the custody layer.</em>
+                <em>Your power to settle.</em>
               </h2>
               <p>
-                Your business owns the payout destination.
+                Your signature fixes where the money goes.
                 <br />
-                Salute provides the tools around it.
+                Collection stays open. The dashboard stays optional.
               </p>
             </Reveal>
             <div className="differences-grid">
               <Reveal className="difference-card">
                 <InfrastructureFlow kind="orders" />
-                <span className="feature-number">01 / RECONCILIATION</span>
+                <span className="feature-number">01 / PAYOUT CONTROL</span>
                 <h3>
-                  A distinct address.
-                  <br />A clearer payment record.
+                  Your payout.
+                  <br />Nobody can redirect it.
                 </h3>
                 <p>
-                  Match multiple deposits to one order. Partial, excess and late
-                  balances stay collectable to the same merchant.
+                  Every order has its own payment address and a merchant
+                  destination locked by your signature. Salute and executors
+                  cannot change it. Partial, excess and late deposits remain
+                  collectable to that same destination.
                 </p>
               </Reveal>
               <Reveal className="difference-card">
                 <InfrastructureFlow kind="deploy" />
                 <span className="feature-number">02 / EVM EFFICIENCY</span>
                 <h3>
-                  Create first.
+                  No payment.
                   <br />
-                  Deploy when funded.
+                  No EVM deployment.
                 </h3>
                 <p>
-                  Creating an EVM order is off-chain. Receiver deployment
-                  happens with its first collection, after a customer funds it.
+                  Sign and share EVM orders off-chain, without paying to deploy
+                  an unused receiver. Once funded, its deployment and first
+                  payout happen in one atomic transaction: both succeed or both
+                  revert.
                 </p>
               </Reveal>
               <Reveal className="difference-card">
                 <InfrastructureFlow kind="collect" />
-                <span className="feature-number">03 / OPEN EXECUTION</span>
+                <span className="feature-number">03 / INDEPENDENT SETTLEMENT</span>
                 <h3>
-                  Choose your executor.
+                  Settle on your terms.
                   <br />
-                  Keep your destination.
+                  Even without Salute.
                 </h3>
                 <p>
-                  Run your own collector or offer a bounded reward. Save the
-                  signed order and collect through the public contracts even if
-                  the Salute dashboard goes offline.
+                  Run your own collector or authorize a capped executor reward.
+                  With exported signed orders and access to the network, you
+                  can collect through public contracts even if the dashboard
+                  disappears. Your subscription does not control settlement.
                 </p>
               </Reveal>
             </div>

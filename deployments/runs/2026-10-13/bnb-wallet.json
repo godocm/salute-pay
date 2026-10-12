@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-12T21:12:28.599Z",
+  "chain": "bnb",
+  "status": "failed",
+  "reason": "insufficient funds for intrinsic transaction cost",
+  "transactions": [
+    "0x6b91f832cf0203d55d6291049f1f3b1e2b7ab9679b3b7f500ea7e8a73f934d36",
+    "0x34ded3109cd174a6110fa47ca2e4402184c90be039fa3f9cc887194e4498309c",
+    "0x754f89295214629efb842d008644a106d3a8cb0901f2b3265b03d2cef174a307",
+    "0xa954dd0f7678ebe590a5900c10088b550b92312aeb16f8c59aca31da49ab02fc"
+  ]
+}

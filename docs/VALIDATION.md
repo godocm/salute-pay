@@ -63,3 +63,12 @@ This is prototype testing, not an independent audit. Actual WalletConnect pairin
 - Removed hero playback controls, timed phase state and simulated create/pay/collect actions. The remaining network/asset/deposit/reward calculator is explicitly labelled demo-only and never submits a transaction. Real execution stays in Launch app.
 - Replaced the three infrastructure illustrations with blue code-native motion: a looping signed/funded/matched order queue, sequential funded EVM deployment, and independent executors collecting to a fixed merchant destination. They are labelled illustrations, pause on hover, provide a shared pause button and respect reduced-motion preferences.
 - Production build and TypeScript checks pass. The existing local homepage responds successfully. Browser access was rejected by the browser tool in this refinement session, so visual and click-through checks of these latest changes remain unverified; no browser-policy bypass was attempted.
+
+
+## Executor queue release · 2026-10-13
+
+- Added a searchable executor queue, separate funding and collection states, sponsorship indicators, live balance checks in batches of four, and visible refresh/error feedback. The queue refreshes while the page is visible, with a 20-second polling interval and no overlapping refreshes.
+- Updated the control section of the homepage. The headline remains “No custody. No platform cut. No wallet pairing.” Infrastructure plans, network costs and optional executor rewards still apply.
+- Cumulative funding comes only from indexed receipt history. Offline orders display current balance; cached sweep estimates and RPC refreshes cannot create trusted cumulative accounting. Added a regression check for that boundary.
+- Preserved new public-test attempts in `deployments/runs/2026-10-13/`. Arbitrum, Robinhood and Tempo reports passed. BNB stopped for insufficient funds; Base stopped on an assertion; Ethereum, Solana and TRON stopped on confirmation timeouts. These reports are incomplete/failed attempts, not evidence that all eight current wallet flows passed. Earlier successful evidence remains separately recorded above. Check pending hashes before retrying; this release did not send new public-chain transactions.
+- Release checks: seven UI/accounting/TLS tests, the isolated EVM wallet flow, and the Next.js production build with TypeScript validation passed. Local browser checks verified network activation, queue refresh feedback, search input and the desktop executor layout.

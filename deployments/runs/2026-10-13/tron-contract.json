@@ -1,0 +1,6 @@
+{
+  "at": "2026-10-12T21:17:25.641Z",
+  "status": "failed",
+  "reason": "TRON confirmation timeout; inspect hash before retrying",
+  "transactions": []
+}

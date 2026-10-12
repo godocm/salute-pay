@@ -816,7 +816,7 @@ export async function verify(n: Network, i: Intent) {
   if (!Number.isInteger(i.decimals) || i.decimals < 0 || i.decimals > 18)
     throw Error("Unsupported token precision.");
 }
-export async function refresh(n: Network, i: Intent): Promise<Intent> {
+export async function refresh(n: Network, i: Intent, persist = true): Promise<Intent> {
   await verify(n, i);
   let balance = 0n;
   if (n.chain === "solana") {
@@ -917,7 +917,7 @@ export async function refresh(n: Network, i: Intent): Promise<Intent> {
       receipts.some((r) => r.kind === "settle" && r.status === "confirmed"),
     verifiedAt: new Date().toISOString(),
   };
-  store(next);
+  if (persist) store(next);
   return next;
 }
 export function paymentLink(i: Intent) {

@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-12T21:23:51.823Z",
+  "chain": "ethereum",
+  "status": "passed",
+  "checks": [
+    "same app wallet connector/client paths",
+    "merchant EIP-712 signing",
+    "separate checkout-link verification",
+    "public merchant mint button call",
+    "underpayment",
+    "overpayment",
+    "executor reward",
+    "public testnet transaction confirmations"
+  ],
+  "transactions": [
+    "0x7ed5f9bff323205fc7b67e4c87396e2d313d3ab43acf77796e9004a858a9ea00",
+    "0xa150c189eda9b787351eb401166a07bd098ad3043d572d3c646769ab4ae5a80f",
+    "0x51b8ae018e555e11afa6b0a8fb72e6da0b322d39534713bb9b1bcfde910ea6c5",
+    "0xd23fa10597f55803dd7e0d7804741ef29378dcdd94f7e2ee8f5d1c85dcacda5b",
+    "0x1b908c6b467e0f6f759eb1a28aa3f859de1c3d5c78407905f4698fcd240662e7"
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-12T21:12:46.019Z",
+  "chain": "robinhood",
+  "status": "passed",
+  "checks": [
+    "same app wallet connector/client paths",
+    "merchant EIP-712 signing",
+    "separate checkout-link verification",
+    "public merchant mint button call",
+    "underpayment",
+    "overpayment",
+    "executor reward",
+    "public testnet transaction confirmations"
+  ],
+  "transactions": [
+    "0x5c793df2f9e6e3e409745ed4acb34ec13793c5a52876da00c566c1be223a1852",
+    "0x32496ced07b6dfb499e6f708c4a3c2ebb3f3bbc062cb8a8a11884693ff5b21f8",
+    "0x2a28140c57207d06b04f6f0c0c55c44288f7d492360016f508c90e2571aeebb9",
+    "0x002556055318bd9e2cb5a776cb442b12033d960d59773fae094983c65d954007",
+    "0xc24c2df2f4d75f375d70a9535d0366cfe6f45a5f2432ac3726ad269ed73e8c28"
+  ]
+}

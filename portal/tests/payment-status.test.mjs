@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { fundingStatus, fundingProgress } from "../lib/payment-status.ts";
+import { fundingStatus, fundingProgress, cumulativeReceived } from "../lib/payment-status.ts";
 import { planAllowsNetwork } from "../lib/plans.ts";
 
 test("invoice funding distinguishes partial, exact, excess and cumulative late deposits", () => {
@@ -32,4 +32,12 @@ test("dashboard tiers allow all six EVM rails at Growth and require Scale for So
     assert.equal(planAllowsNetwork("scale", chain), true);
   }
   assert.equal(planAllowsNetwork("scale", "unknown"), false);
+});
+
+
+test("offline balance and cached sweeps cannot masquerade as cumulative receipt history", () => {
+  assert.equal(cumulativeReceived({ balance: "10", collected: "500" }), 10n);
+  assert.equal(cumulativeReceived({ balance: "0", collected: "100" }), 0n);
+  assert.equal(cumulativeReceived({ balance: "10", collected: "500", received: "100" }), 100n);
+  assert.equal(fundingStatus(cumulativeReceived({ balance: "0", collected: "100" }), "100"), "awaiting");
 });

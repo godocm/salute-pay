@@ -1,5 +1,22 @@
 export type FundingStatus = "awaiting" | "partially_paid" | "paid" | "overpaid";
 
+export const fundingLabels: Record<FundingStatus, string> = {
+  awaiting: "Awaiting payment",
+  partially_paid: "Underpaid",
+  paid: "Fully paid",
+  overpaid: "Overpaid",
+};
+
+export function cumulativeReceived(i: {
+  balance: string;
+  collected?: string;
+  received?: string;
+}) {
+  // Only the server index supplies cumulative receipt history. A live balance
+  // and cached sweep estimates cannot establish how much arrived in past sweeps.
+  return BigInt(i.received ?? i.balance);
+}
+
 // Use gross, cumulative invoice-asset receipts, not the remaining vault balance.
 export function fundingStatus(
   received: string | bigint,

@@ -1,0 +1,12 @@
+{
+  "at": "2026-10-12T21:23:03.715Z",
+  "chain": "base",
+  "status": "failed",
+  "reason": "missing revert data",
+  "stage": "underpayment settlement",
+  "transactions": [
+    "0x877a308a0ee82189cb954eefda3bca8a17dbfec78568a39b512e31321f61cea1",
+    "0xb05d7fcd63339976b22aaebc0cdcd3b79ebff9fdbcc32878c2d8e11011e95f65",
+    "0xc6874c601a143ddf1dab1e15782b4079d251ccbb1fdac352f4656ffffc4bac31"
+  ]
+}

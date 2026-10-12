@@ -1,0 +1,22 @@
+{
+  "at": "2026-10-12T21:12:38.082Z",
+  "chain": "arbitrum",
+  "status": "passed",
+  "checks": [
+    "same app wallet connector/client paths",
+    "merchant EIP-712 signing",
+    "separate checkout-link verification",
+    "public merchant mint button call",
+    "underpayment",
+    "overpayment",
+    "executor reward",
+    "public testnet transaction confirmations"
+  ],
+  "transactions": [
+    "0x9f333f5d41f4d6bd513227784332ca7920d5f48febef1441173c2d03c687507b",
+    "0x704caa0ecd3e7b002f3b988710b70eb066f53931c2bca5a4f1f36a3612783859",
+    "0x0fa364ab9c20b751cbd7c03cd096a8695d610d66c06b82b62912c1fcbac42abd",
+    "0x4a5cb7a1866827a1e59db0837d97ff41fd977b212fc3f6e342d70f0c395dc57f",
+    "0x957e4f986f27dab09deb1e47beca0294e34c1b3337e0a62a65a50c8369c21c4d"
+  ]
+}

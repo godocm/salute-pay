@@ -81,7 +81,8 @@ const report = {
   checks: [],
   transactions: [],
 };
-const evidence = new URL(
+const outputArg = process.argv.indexOf("--output");
+const evidence = outputArg >= 0 ? process.argv[outputArg + 1] : new URL(
   confirmationsOnly ? "../../deployments/solana-confirmation-validation.json" : "../../deployments/solana-validation.json",
   import.meta.url,
 );

@@ -1,0 +1,11 @@
+{
+  "at": "2026-10-12T21:12:15.835Z",
+  "chain": "base",
+  "status": "failed",
+  "reason": "ERR_ASSERTION",
+  "transactions": [
+    "0x1d64e206d84e7578217752e3b0e101977f0d50e1c5606b49793a7d906c1c18ec",
+    "0xf12ccc2a068ce172e9b0208b4fd5b5e96ebc1a5333cc2c2e1b003a11ced35487",
+    "0x852d8a87c848497528e83ebb74850237d1c80f4c341ef3e9bbe13a70c69e2965"
+  ]
+}

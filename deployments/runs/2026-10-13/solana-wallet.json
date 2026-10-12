@@ -1,0 +1,32 @@
+{
+  "at": "2026-10-12T21:12:16.301Z",
+  "chain": "solana",
+  "chainId": "devnet",
+  "program": "4soYk2h6YM9mAn3WWTCLgvzEGA5V1jWacupCASzY14zS",
+  "token": "HYYqqGLv2DjmpeHtMBeV8psRVBwwPvjjAW6XjTRwagKp",
+  "status": "failed",
+  "checks": [],
+  "transactions": [
+    {
+      "kind": "fund separate test roles",
+      "hash": "5BCfqdyefE1gVDj4XiK6842zkYnuex9yfSU1K6BaPDsVBi1mnCtgbkw43WJcdfHzPnFXkTBPduXBFJgtYeh8HrLb"
+    },
+    {
+      "kind": "deposit",
+      "hash": "CHdJK6A3BWzLnL3HmQBrZ48aesykgcVXyAtb8tBfNS7GmGXfbxiEUkXBPY1Kcxuqef9hdjUr3bSW7QoZuDS42wX"
+    },
+    {
+      "kind": "settle",
+      "hash": "5zWVMSBTbPQEG6GN2UcPP5S5s8N9PMDhGjs9L4gP8hMtJ9VYNgZuzxnCj9JVDjw7mLg6y8M6evGg3wGjKXU95nYt"
+    },
+    {
+      "kind": "deposit",
+      "hash": "5PVSJ8oBW8zNB4eF1sbVWoZgNV1DfGzWv6xzACy8KcFfr6hPETFB5gHsWiRiCLbe3qFjomZwKGj45uYqiEwvHHBv"
+    },
+    {
+      "kind": "settle",
+      "hash": "61xncQUho5xuof66WcFN3sUHrPe34rMQCgyedJTLpTqMAncdHF12whhZyvNNiPkmYtJZw7X4xLSuB11U7Sk3NvYE"
+    }
+  ],
+  "reason": "Confirmation timeout. Transaction remains pending; check its signature before retrying."
+}

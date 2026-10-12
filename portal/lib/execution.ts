@@ -1,5 +1,17 @@
 import type { Intent, Chain } from "./intents";
 
+export function collectionStatus(i: Intent) {
+  if (i.receipts.some((r) => r.kind === "settle" && r.status === "pending"))
+    return { status: "pending", label: "Confirming" };
+  if (BigInt(i.balance) > 0n)
+    return BigInt(i.balance) > BigInt(i.terms.executorFee)
+      ? { status: "ready", label: "Ready to execute" }
+      : { status: "sponsor", label: "Sponsorship needed" };
+  return i.settled || BigInt(i.collected ?? "0") > 0n
+    ? { status: "collected", label: "Collected" }
+    : { status: "awaiting", label: "Waiting for funds" };
+}
+
 // EVM addresses are case-insensitive; Solana and TRON Base58 addresses are not.
 export function sameWallet(chain: Chain, left: string, right: string) {
   if (!left || !right) return false;

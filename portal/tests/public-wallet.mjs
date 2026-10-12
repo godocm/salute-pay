@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
 import {
   Wallet,
   NonceManager,
@@ -77,7 +77,13 @@ const config = { ...defaults[chain], ...r, rpc: p._getConnection().url },
     ["function balanceOf(address) view returns(uint256)"],
     p,
   );
+const outputArg = process.argv.indexOf("--output");
+const output = outputArg >= 0 ? process.argv[outputArg + 1] : new URL(`../../deployments/${chain}-wallet-validation.json`, import.meta.url);
+if (!output) throw Error("--output requires a path");
+assert.equal(String((await p.getNetwork()).chainId), String(r.chainId));
+assert.equal(r.environment, "testnet");
 let result;
+let stage = "signing";
 try {
   const order = await create(
     config,
@@ -86,9 +92,14 @@ try {
     "2",
     false,
   );
+  await mkdir(new URL("../../.data/testnets/", import.meta.url), { recursive: true });
+  const orderPath = new URL(`../../.data/testnets/ui-${chain}-${order.terms.id.slice(2)}.json`, import.meta.url);
+  await writeFile(orderPath, JSON.stringify(order, null, 2), { flag: "wx" });
   assert.equal(parseLink(paymentLink(order)).address, order.address);
   current = payer;
+  stage = "mint";
   await mintTestTokens(config);
+  stage = "underpayment";
   await act(config, order, "deposit", "10", () => {}, payer.address);
   let updated;
   for (let retry = 0; retry < 12; retry++) {
@@ -98,8 +109,11 @@ try {
   }
   assert.equal(updated.balance, "10000000");
   const before = await token.balanceOf(merchant.address);
-  await act(config, updated, "settle", "", () => {}, payer.address);
-  assert.equal((await token.balanceOf(merchant.address)) - before, 8000000n);
+  stage = "underpayment settlement";
+  const first = await act(config, updated, "settle", "", () => {}, payer.address);
+  const receipt = await p.getTransactionReceipt(first);
+  assert.equal((await token.balanceOf(merchant.address, { blockTag: receipt.blockNumber })) - before, 8000000n);
+  stage = "overpayment";
   await act(config, order, "deposit", "500", () => {}, payer.address);
   for (let retry = 0; retry < 12; retry++) {
     updated = await refresh(config, order);
@@ -107,6 +121,7 @@ try {
     await new Promise((r) => setTimeout(r, 1500));
   }
   assert.equal(updated.balance, "500000000");
+  stage = "overpayment settlement";
   await act(config, updated, "settle", "", () => {}, payer.address);
   result = {
     at: new Date().toISOString(),
@@ -132,7 +147,8 @@ try {
     at: new Date().toISOString(),
     chain,
     status: "failed",
-    reason: err.shortMessage || err.code || err.message,
+    reason: err.shortMessage || err.message || err.code,
+    stage,
     transactions,
   };
   process.exitCode = 1;
@@ -141,10 +157,7 @@ try {
   );
 } finally {
   await writeFile(
-    new URL(
-      `../../deployments/${chain}-wallet-validation.json`,
-      import.meta.url,
-    ),
+    output,
     JSON.stringify(result, null, 2) + "\n",
   );
   p.destroy();
