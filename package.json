@@ -8,7 +8,7 @@
     "compile:tron": "cd tron && ./node_modules/.bin/tronbox compile --all",
     "test": "node --test --test-concurrency=1 test/*.test.mjs",
     "test:platform": "node scripts/test-platform.mjs",
-    "test:ui": "node --test portal/tests/payment-status.test.mjs portal/tests/execution.test.mjs portal/tests/database-connection.test.mjs",
+    "test:ui": "node --test portal/tests/payment-status.test.mjs portal/tests/execution.test.mjs portal/tests/database-connection.test.mjs portal/tests/webhook-transport.test.mjs",
     "dev": "npm --prefix portal run dev",
     "build": "npm run compile && npm run compile:tron && node scripts/export-abi.mjs && npm --prefix portal run build",
     "deploy": "node scripts/deploy-collection.mjs",

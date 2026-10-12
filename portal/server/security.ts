@@ -3,6 +3,7 @@ import { isIP } from "node:net";
 import { lookup } from "node:dns/promises";
 import { request as httpsRequest } from "node:https";
 import ipaddr from "ipaddr.js";
+import { pinnedLookup } from "./pinned-lookup";
 export const random = () => randomBytes(24).toString("base64url");
 export const hash = (s: string) => createHash("sha256").update(s).digest("hex");
 export class HttpError extends Error {
@@ -89,8 +90,7 @@ export async function deliverHttps(
     addresses = await lookup(u.hostname, { all: true });
   if (!addresses.length || addresses.some((a) => !publicAddress(a.address)))
     throw Error("Unsafe webhook destination.");
-  const selected = addresses[0];
-  // Pin the checked DNS answer in the socket lookup; retain hostname for TLS certificate verification.
+  // Pin only the checked DNS answers; retain hostname for TLS certificate verification.
   return new Promise<number>((resolve, reject) => {
     const r = httpsRequest(
       u,
@@ -101,7 +101,7 @@ export async function deliverHttps(
           "content-type": "application/json",
           "content-length": Buffer.byteLength(payload),
         },
-        lookup: (_h, _o, cb) => cb(null, selected.address, selected.family),
+        lookup: pinnedLookup(addresses),
         timeout: 8000,
       },
       (response) => {
