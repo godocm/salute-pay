@@ -65,7 +65,7 @@ const railDetails = {
     ],
     items: [
       "Native SOL can prefund the vault before atomic registration and collection when rent-exemption requirements are met. The merchant can prepare it for smaller deposits.",
-      "SPL tokens require an initialized vault token account before funding. The app asks the merchant to sponsor setup and rent before sharing the payment address.",
+      "SPL tokens require an initialized vault token account before funding. The app asks the merchant to sponsor setup and rent before sharing the payment address. Wallet checkout can create a missing token account in the same transaction as payment, with the payer covering its rent in SOL.",
       "The program retains the vault reserve for late deposits. Wrong-mint collection pays the same merchant without the intended-token reward. Public upgrade authority is revoked.",
     ],
     cost: "SOL transaction fees plus account setup/rent. SPL setup is an additional step.",

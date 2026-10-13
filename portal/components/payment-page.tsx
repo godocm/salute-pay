@@ -334,6 +334,9 @@ export default function PaymentPage({ slug }: { slug: string }) {
                 </button>
                 <small>
                   Network fees are shown in your wallet before confirmation.
+                  {i.network.chain === "solana" &&
+                    i.terms.token !== "11111111111111111111111111111111" &&
+                    " If the payment token account needs setup, this transaction also creates it. Your wallet pays its one-time rent in SOL, separately from the token payment."}
                 </small>
               </section>
             ) : (

@@ -987,22 +987,25 @@ export default function Workspace({
               . Save the signed order; Salute cannot restore an authorization
               you lose.
             </p>
-            {i.network.chain === "solana" &&
-              i.terms.token === "11111111111111111111111111111111" && (
+            {i.network.chain === "solana" && (
                 <button
                   className="button secondary"
                   style={{ margin: "0 24px" }}
                   disabled={!!busy || !self}
                   onClick={() =>
-                    run("Preparing SOL address", async () => {
+                    run("Preparing payment address", async () => {
                       await prepareSolanaPayment(configFor(i, configs), i);
                       setNotice(
-                        "SOL address prepared for small deposits. Vault rent is retained separately.",
+                        i.terms.token === "11111111111111111111111111111111"
+                          ? "SOL address prepared for small deposits. Vault rent is retained separately."
+                          : "SPL payment address prepared. Customers can now transfer tokens; setup rent is sponsored by your wallet.",
                       );
                     })
                   }
                 >
-                  Sponsor SOL address setup for tiny deposits
+                  {i.terms.token === "11111111111111111111111111111111"
+                    ? "Sponsor SOL address setup for tiny deposits"
+                    : "Prepare SPL payment address"}
                 </button>
               )}
             <div className="intent-wallet">

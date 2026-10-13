@@ -1135,8 +1135,13 @@ export async function act(
           );
         } else {
           if (!(await c.getAccountInfo(a.ata)))
-            throw Error(
-              "Merchant must prepare this SPL payment address before funding.",
+            tx.add(
+              createAssociatedTokenAccountIdempotentInstruction(
+                payer,
+                a.ata,
+                a.vault,
+                a.mint,
+              ),
             );
           tx.add(
             createTransferCheckedInstruction(
@@ -1364,7 +1369,22 @@ export async function prepareSolanaPayment(n: Network, i: Intent) {
   const c = await solCheck(n, account),
     a = solAddresses(n, i.terms),
     native = i.terms.token === zeroSol;
-  if (await c.getAccountInfo(a.order)) return;
+  if (await c.getAccountInfo(a.order)) {
+    if (native || await c.getAccountInfo(a.ata)) return;
+    // Repair a missing token account without registering the order again.
+    const payer = new PublicKey(account);
+    const tx = new Transaction().add(
+      createAssociatedTokenAccountIdempotentInstruction(payer, a.ata, a.vault, a.mint),
+    );
+    const block = await c.getLatestBlockhash();
+    tx.feePayer = payer;
+    tx.recentBlockhash = block.blockhash;
+    const signed = await solWallet().signTransaction(tx);
+    const hash = await c.sendRawTransaction(signed.serialize());
+    const receipt = await waitSolanaReceipt(c, hash, block);
+    if (receipt.value.err) throw Error("Payment-address setup failed.");
+    return hash;
+  }
   const payer = new PublicKey(account),
     keys = [
       meta(payer, true, true),

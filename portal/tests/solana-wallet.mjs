@@ -7,6 +7,7 @@ import {
   getOrCreateAssociatedTokenAccount,
   mintTo,
   getAccount,
+  getAssociatedTokenAddressSync,
 } from "@solana/spl-token";
 import {
   create,
@@ -102,16 +103,31 @@ try {
   n.token = mint.toBase58();
   active = 0;
   const tokenOrder = await create(n, "Standard wallet SPL", "100", "0", false);
-  await prepareSolanaPayment(n, tokenOrder);
+  const paymentAta = new PublicKey(tokenOrder.address);
+  assert.equal(await c.getAccountInfo(paymentAta), null);
   const payerAta = await getOrCreateAssociatedTokenAccount(
     c,
     keys[0],
     mint,
     keys[1].publicKey,
   );
-  await mintTo(c, keys[0], mint, payerAta.address, keys[0], 500_000_000n);
+  await mintTo(c, keys[0], mint, payerAta.address, keys[0], 501_000_000n);
   active = 1;
+  await assert.rejects(() => act(n, tokenOrder, "deposit", "600", () => {}));
+  assert.equal(await c.getAccountInfo(paymentAta), null, "failed funding must not leave setup behind");
   await act(n, tokenOrder, "deposit", "500", () => {});
+  const vaultToken = await getAccount(c, paymentAta);
+  assert.equal(vaultToken.amount, 500_000_000n);
+  assert.equal(
+    getAssociatedTokenAddressSync(mint, vaultToken.owner, true).toBase58(),
+    tokenOrder.address,
+  );
+  // Existing-account funding and merchant setup must both preserve prefunded tokens.
+  await act(n, tokenOrder, "deposit", "1", () => {});
+  active = 0;
+  await prepareSolanaPayment(n, tokenOrder);
+  await prepareSolanaPayment(n, tokenOrder);
+  assert.equal((await getAccount(c, paymentAta)).amount, 501_000_000n);
   active = 2;
   await act(
     n,
@@ -127,7 +143,7 @@ try {
     mint,
     keys[0].publicKey,
   );
-  assert.equal((await getAccount(c, merchantAta.address)).amount, 500_000_000n);
+  assert.equal((await getAccount(c, merchantAta.address)).amount, 501_000_000n);
   const [authority] = PublicKey.findProgramAddressSync(
     [Buffer.from("test-mint-authority")],
     new PublicKey(n.deployment),
